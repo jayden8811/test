@@ -12,116 +12,150 @@
   :root {
     --page: #fcfcfc;
     --ink: #1a1a1a;
-    --ink-muted: #7d7d7d;
-    --icon: #6b6b6b;
+    --muted: #7d7d7d;
+    --ic: #6b6b6b;
     --red: #e0434b;
     --orange: #ff6b2c;
-
-    --box: #222222;
-    --box-ink: #ffffff;
-    --box-muted: #6f6f6f;
-    --box-icon: #a0a0a0;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html { background: var(--page); }
   body {
-    background: var(--page);
-    color: var(--ink);
+    background: var(--page); color: var(--ink);
     font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
-    -webkit-font-smoothing: antialiased;
-    letter-spacing: -0.01em;
+    -webkit-font-smoothing: antialiased; letter-spacing: -0.01em;
   }
 
-  /* ---------- Shared text treatment (muted + bold phrases with inline icons) ---------- */
-  .greet  { font-size: clamp(20px, 2.1vw, 24px); font-weight: 500; line-height: 1.4; }
-  .big    { font-size: clamp(24px, 3vw, 34px); font-weight: 400; line-height: 1.32; }
-  .small  { font-size: clamp(16px, 1.7vw, 19px); font-weight: 400; line-height: 1.5; }
-  .big .m, .small .m { color: var(--ink-muted); }
-  .big b, .small b   { font-weight: 600; color: var(--ink); }
+  /* ---------- One text size for everything ---------- */
+  .t { font-size: clamp(19px, 2.2vw, 25px); line-height: 1.45; font-weight: 400; color: var(--ink); }
+  .t.g { font-weight: 500; }
+  .t .m { color: var(--muted); }
+  .t b { font-weight: 600; color: var(--ink); }
+  .t .red, .t .red b { color: var(--red); }
   .ico {
-    display: inline-block; width: 1em; height: 1em; vertical-align: -0.12em;
-    margin: 0 .18em 0 .1em; fill: none; stroke: var(--icon);
+    display: inline-block; width: .9em; height: .9em; vertical-align: -0.1em;
+    margin: 0 .2em 0 .1em; fill: none; stroke: var(--ic);
     stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round;
   }
-  .small .ico { width: .95em; height: .95em; }
-  .red, .red b { color: var(--red) !important; }
-  .red .ico { stroke: var(--red); }
+  .t .red .ico { stroke: var(--red); }
   .dot {
-    display: inline-grid; place-items: center; width: 1.15em; height: 1.15em; border-radius: 50%;
+    display: inline-grid; place-items: center; width: 1.1em; height: 1.1em; border-radius: 50%;
     background: radial-gradient(circle at 30% 25%, #f0a06a, #c9793f 75%);
     color: #1a1a1a; font-size: .8em; font-weight: 600; vertical-align: .02em; margin: 0 .25em;
   }
 
-  /* ---------- Hero (light, pinned behind the box) ---------- */
+  /* ---------- Stack: hero pinned, cards rise over it one by one ---------- */
+  .stack { position: relative; }
   .hero {
     position: sticky; top: 0; height: 100vh; height: 100svh;
-    display: grid; place-items: center; padding: 0 24px 72px;
-    text-align: center; will-change: transform, opacity;
+    display: grid; place-items: center; padding: 0 24px 72px; text-align: center;
     transform-origin: 50% 40%;
   }
-  .hero-inner { max-width: 820px; display: grid; gap: 28px; }
+  .hero .inner { max-width: 760px; display: grid; gap: 22px; }
 
-  /* ---------- Dark box that rises over the hero ---------- */
-  .box {
-    position: relative; z-index: 2;
-    margin: -76px 12px 0;
-    min-height: 130vh; min-height: 130svh;
-    padding: clamp(72px, 12vw, 120px) 24px 140px;
-    background: var(--box); color: var(--box-ink);
+  .card {
+    position: relative; margin: -56px 12px 0; padding: 72px 24px 56px;
+    display: grid; place-items: center; text-align: center;
     border-radius: 44px 44px 0 0;
-    box-shadow: 0 -24px 70px rgba(0,0,0,.14), inset 0 1px 0 rgba(255,255,255,.07);
-    text-align: center;
+    box-shadow: 0 -24px 70px rgba(0,0,0,.16), inset 0 1px 0 rgba(255,255,255,.08);
+    --ink: #fff; --muted: rgba(255,255,255,.45); --ic: rgba(255,255,255,.62); --red: #ff6a72;
   }
-  .box::before { /* soft top sheen like the reference widget */
+  .card::before {
     content: ""; position: absolute; inset: 0 0 auto 0; height: 160px; border-radius: inherit;
-    background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,0));
-    pointer-events: none;
+    background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,0)); pointer-events: none;
   }
-  .box-inner { position: relative; max-width: 820px; margin: 0 auto; display: grid; gap: 120px; }
-  .box .big .m, .box .small .m { color: var(--box-muted); }
-  .box .big b, .box .small b   { color: var(--box-ink); }
-  .box .ico { stroke: var(--box-icon); }
-  .box .red, .box .red b { color: #ff6a72 !important; }
-  .box .red .ico { stroke: #ff6a72; }
-  .block { display: grid; gap: 28px; }
+  .card.pin { position: sticky; top: 0; height: 100vh; height: 100svh; }
+  .c1 { background: #222222; z-index: 2; margin-top: -76px; }
+  .c2 { background: #1c2b4a; z-index: 3; }
+  .c3 { background: #15332b; z-index: 4; align-items: start; min-height: 100vh; min-height: 100svh; padding-bottom: 140px; }
 
-  /* words dim -> bright as each block scrolls in */
-  .reveal { opacity: .22; transform: translateY(18px); transition: opacity .7s ease, transform .7s ease; }
+  .card .inner { position: relative; width: 100%; max-width: 760px; display: grid; gap: 22px; will-change: transform, opacity; }
+  .reveal { opacity: .2; transform: translateY(18px); transition: opacity .7s ease, transform .7s ease; }
   .reveal.in { opacity: 1; transform: none; }
 
-  /* ---------- CTA row, styled like the widget footer ---------- */
+  /* ---------- Daily brief demo ---------- */
+  .demo { position: relative; width: 100%; max-width: 640px; margin: 18px auto 0; height: 560px; }
+  .brief {
+    position: absolute; inset: 0 0 auto 0; text-align: left;
+    background: var(--page); border-radius: 30px; padding: 32px 32px 30px;
+    --ink: #1a1a1a; --muted: #7d7d7d; --ic: #6b6b6b; --red: #e0434b;
+    box-shadow: 0 24px 60px rgba(0,0,0,.35);
+  }
+  .brief .t + .t { margin-top: 14px; }
+  .hit {
+    display: inline-block; padding: 0 .3em; margin: 0 -.1em; border-radius: .5em;
+    transition: background .25s ease; position: relative;
+  }
+  .hit.pressed { background: rgba(255,107,44,.16); }
+  .ripple {
+    position: absolute; width: 28px; height: 28px; margin: -14px 0 0 -14px; border-radius: 50%;
+    border: 2px solid var(--orange); opacity: 0; pointer-events: none; z-index: 4;
+  }
+  .ripple.go { animation: ripple .7s ease-out; }
+  @keyframes ripple { from { transform: scale(.3); opacity: .9; } to { transform: scale(2.6); opacity: 0; } }
+
+  .cursor {
+    position: absolute; left: 0; top: 0; z-index: 5; pointer-events: none; opacity: 0;
+    filter: drop-shadow(0 3px 5px rgba(0,0,0,.35)); margin: -4px 0 0 -6px;
+  }
+  .cursor svg { display: block; width: 30px; height: 30px; transition: transform .12s ease; transform-origin: 20% 15%; }
+  .cursor.click svg { transform: scale(.8); }
+
+  .leads-wrap { max-height: 0; opacity: 0; overflow: hidden; transition: max-height .8s cubic-bezier(.4,0,.2,1), opacity .5s ease, margin .8s ease; margin-top: 0; }
+  .leads-wrap.open { max-height: 330px; opacity: 1; margin-top: 22px; }
+  .leads-clip {
+    height: 310px; overflow: hidden; border-top: 1px solid #ececec;
+    -webkit-mask-image: linear-gradient(transparent, #000 10%, #000 88%, transparent);
+            mask-image: linear-gradient(transparent, #000 10%, #000 88%, transparent);
+  }
+  .leads { list-style: none; animation: roll 22s linear infinite; animation-play-state: paused; }
+  .leads-wrap.open .leads { animation-play-state: running; }
+  @keyframes roll { from { transform: translateY(0); } to { transform: translateY(-50%); } }
+  .lead { display: flex; align-items: center; gap: 14px; padding: 14px 4px; border-bottom: 1px solid #f0f0f0; }
+  .av {
+    flex: none; width: 42px; height: 42px; border-radius: 50%; display: grid; place-items: center;
+    font-size: 15px; font-weight: 600; color: #1a1a1a;
+  }
+  .who { flex: 1; min-width: 0; text-align: left; }
+  .who .n { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; font-size: 16px; font-weight: 600; color: #1a1a1a; }
+  .tag { font-size: 12px; font-weight: 500; color: #b4531a; background: rgba(255,107,44,.14); padding: 2px 8px; border-radius: 999px; }
+  .who .r { font-size: 14px; color: #7d7d7d; margin-top: 1px; }
+  .who .e { font-size: 14px; color: #3d3d3d; margin-top: 1px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .li { flex: none; width: 28px; height: 28px; border-radius: 7px; background: #0a66c2; display: grid; place-items: center; }
+  .li svg { width: 16px; height: 16px; fill: #fff; }
+  .sample { position: absolute; left: 0; right: 0; bottom: 0; font-size: 14px; color: rgba(255,255,255,.4); text-align: center; }
+
+  /* ---------- CTA ---------- */
   .cta {
     display: flex; align-items: center; justify-content: space-between; gap: 16px;
-    max-width: 560px; margin: 0 auto; width: 100%;
-    padding: 22px 24px; border-radius: 28px; text-decoration: none; color: var(--box-ink);
-    background: #1a1a1a; border: 1px solid rgba(255,255,255,.08);
+    max-width: 560px; margin: 56px auto 0; width: 100%;
+    padding: 22px 24px; border-radius: 28px; text-decoration: none; color: #fff;
+    background: #0f1f1a; border: 1px solid rgba(255,255,255,.08);
     transition: transform .2s ease, background .2s ease;
   }
-  .cta:hover { transform: translateY(-2px); background: #171717; }
-  .cta-label { display: flex; align-items: center; gap: 12px; font-size: 22px; font-weight: 600; }
-  .cta-label .ico { width: 28px; height: 28px; margin: 0; stroke: #fff; }
+  .cta:hover { transform: translateY(-2px); background: #0c1914; }
+  .cta-label { display: flex; align-items: center; gap: 12px; font-size: clamp(19px, 2.2vw, 25px); font-weight: 600; }
+  .cta-label .ico { width: 1.1em; height: 1.1em; margin: 0; stroke: #fff; }
   .go {
-    flex: none; width: 76px; height: 76px; border-radius: 50%; display: grid; place-items: center;
+    flex: none; width: 72px; height: 72px; border-radius: 50%; display: grid; place-items: center;
     background: radial-gradient(circle at 35% 25%, #ff8a4f, var(--orange) 70%);
     box-shadow: 0 6px 18px rgba(255,107,44,.35), inset 0 -3px 6px rgba(0,0,0,.18);
   }
-  .go svg { width: 30px; height: 30px; fill: none; stroke: #222; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
-  .cta-note { margin-top: 18px; font-size: 16px; color: var(--box-muted); }
+  .go svg { width: 28px; height: 28px; fill: none; stroke: #222; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
 
   @media (max-width: 560px) {
-    .box { border-radius: 32px 32px 0 0; margin-inline: 8px; }
-    .box-inner { gap: 88px; }
-    .go { width: 64px; height: 64px; }
-    .cta-label { font-size: 19px; }
+    .card { border-radius: 32px 32px 0 0; margin-inline: 8px; padding-inline: 18px; }
+    .brief { padding: 24px 20px; border-radius: 24px; }
+    .demo { height: 540px; }
+    .go { width: 60px; height: 60px; }
   }
   @media (prefers-reduced-motion: reduce) {
     .reveal { opacity: 1; transform: none; transition: none; }
+    .leads { animation: none; }
   }
 </style>
 </head>
 <body>
 
-<!-- Inline icon set -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <symbol id="i-cal" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="3"/><path d="M16 2v4M8 2v4M3 10h18"/></symbol>
   <symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></symbol>
@@ -129,99 +163,207 @@
   <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></symbol>
   <symbol id="i-alert" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 7v6M12 17h.01"/></symbol>
   <symbol id="i-filter" viewBox="0 0 24 24"><path d="M3 4h18l-7 8.500V19l-4 2v-8.500z"/></symbol>
+  <symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></symbol>
 </svg>
 
-<!-- Hero -->
-<header class="hero" id="hero">
-  <div class="hero-inner">
-    <p class="greet">Meet <span class="dot">P</span>Praz.</p>
+<div class="stack">
 
-    <p class="big">
-      <span class="m">Your ads bring the traffic. Praz fills your</span>
-      <b><svg class="ico"><use href="#i-cal"/></svg>calendar with booked calls</b>
-      <span class="m">from</span>
-      <b><svg class="ico"><use href="#i-target"/></svg>high-intent prospects</b>
-      <span class="m">only, or</span>
-      <b><svg class="ico"><use href="#i-shield"/></svg>you don't pay.</b>
-    </p>
-
-    <p class="small">
-      <span class="m">Praz is monitoring</span> <b>your ad traffic</b>
-      <span class="m">and will flag anything</span>
-      <span class="red"><b><svg class="ico"><use href="#i-alert"/></svg>high-intent</b></span>
-      <span class="m">as it happens.</span>
-    </p>
-  </div>
-</header>
-
-<!-- Box that rises over the hero -->
-<main class="box" id="box">
-  <div class="box-inner">
-
-    <section class="block reveal">
-      <p class="greet">How <span class="dot">P</span>Praz works</p>
-      <p class="big">
-        <span class="m">We spot the</span>
-        <b><svg class="ico"><use href="#i-eye"/></svg>anonymous visitors</b>
-        <span class="m">on your site, keep only the</span>
-        <b><svg class="ico"><use href="#i-target"/></svg>high-intent buyers</b>
-        <span class="m">and put them straight on your</span>
-        <b><svg class="ico"><use href="#i-cal"/></svg>sales calendar.</b>
+  <!-- Hero -->
+  <header class="hero" id="hero">
+    <div class="inner">
+      <p class="t g">Meet <span class="dot">P</span>Praz.</p>
+      <p class="t">
+        <span class="m">Your ads bring the traffic. Praz brings</span>
+        <b><svg class="ico"><use href="#i-cal"/></svg>booked calls</b>
+        <span class="m">from</span>
+        <b><svg class="ico"><use href="#i-target"/></svg>high-intent prospects,</b>
+        <span class="m">guaranteed.</span>
       </p>
-      <p class="small">
-        <span class="m">Internal traffic, competitors and irrelevant industries are</span>
-        <b><svg class="ico"><use href="#i-filter"/></svg>filtered out</b>
-        <span class="m">so your team only talks to leads that matter.</span>
+      <p class="t">
+        <span class="m">Praz is monitoring</span> <b>your ad traffic</b>
+        <span class="m">and will flag anything</span>
+        <span class="red"><b><svg class="ico"><use href="#i-alert"/></svg>high-intent</b></span>
+        <span class="m">as it happens.</span>
       </p>
-    </section>
+    </div>
+  </header>
 
-    <section class="block reveal" id="guarantee">
-      <p class="greet">Our guarantee</p>
-      <p class="big">
-        <span class="m">Built only for high-ticket B2B SaaS teams running ads. If we don't book you calls,</span>
-        <b><svg class="ico"><use href="#i-shield"/></svg>you don't pay.</b>
-      </p>
-      <p class="small">
-        <span class="m">No vanity metrics. Just</span> <b>booked calls</b>
-        <span class="m">with</span> <b>the right people.</b>
-      </p>
-    </section>
+  <!-- 1 · How it works -->
+  <section class="card c1 pin" id="how">
+    <div class="inner">
+      <div class="reveal" style="display:grid;gap:22px">
+        <p class="t g">How <span class="dot">P</span>Praz works</p>
+        <p class="t">
+          <span class="m">We spot the</span>
+          <b><svg class="ico"><use href="#i-eye"/></svg>anonymous visitors</b>
+          <span class="m">on your site, keep only the</span>
+          <b><svg class="ico"><use href="#i-target"/></svg>high-intent buyers</b>
+          <span class="m">and put them on your</span>
+          <b><svg class="ico"><use href="#i-cal"/></svg>calendar.</b>
+        </p>
+        <p class="t">
+          <span class="m">Competitors, internal traffic and irrelevant industries are</span>
+          <b><svg class="ico"><use href="#i-filter"/></svg>filtered out.</b>
+        </p>
+      </div>
+    </div>
+  </section>
 
-    <section class="block reveal" id="book">
-      <a class="cta" href="#book">
-        <span class="cta-label"><svg class="ico"><use href="#i-cal"/></svg>Book a call</span>
-        <span class="go" aria-hidden="true">
-          <svg viewBox="0 0 24 24"><path d="M7 17 17 7M8 7h9v9"/></svg>
+  <!-- 2 · Guarantee -->
+  <section class="card c2 pin" id="guarantee">
+    <div class="inner">
+      <div class="reveal" style="display:grid;gap:22px">
+        <p class="t g">Our guarantee</p>
+        <p class="t">
+          <span class="m">If we don't book you calls,</span>
+          <b><svg class="ico"><use href="#i-shield"/></svg>you don't pay.</b>
+        </p>
+        <p class="t">
+          <span class="m">Built only for</span> <b>high-ticket B2B SaaS</b>
+          <span class="m">teams running ads.</span>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3 · What you get -->
+  <section class="card c3" id="get">
+    <div class="inner">
+      <div class="reveal" style="display:grid;gap:22px">
+        <p class="t g">What you get</p>
+        <p class="t"><span class="m">A daily brief of the leads worth your team's time.</span></p>
+      </div>
+
+      <div class="demo reveal" id="demo">
+        <div class="brief" id="brief">
+          <p class="t g">Good morning, <span class="dot">A</span>Alex!</p>
+          <p class="t">
+            <span class="m">Today includes</span>
+            <span class="hit" id="hit"><svg class="ico"><use href="#i-bolt"/></svg><b>12 high-intent leads</b></span>
+            <span class="m">found today.</span>
+          </p>
+
+          <div class="leads-wrap" id="leadsWrap">
+            <div class="leads-clip">
+              <ul class="leads" id="leads"></ul>
+            </div>
+          </div>
+        </div>
+        <span class="ripple" id="ripple"></span>
+        <span class="cursor" id="cursor">
+          <svg viewBox="0 0 24 24"><path d="M5 3l14 7-6 2-2 6z" fill="#111" stroke="#fff" stroke-width="1.5" stroke-linejoin="round"/></svg>
         </span>
-      </a>
-    </section>
+        <p class="sample">Sample leads shown for illustration.</p>
+      </div>
 
-  </div>
-</main>
+      <a class="cta reveal" href="#get">
+        <span class="cta-label"><svg class="ico"><use href="#i-cal"/></svg>Book a call</span>
+        <span class="go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 17 17 7M8 7h9v9"/></svg></span>
+      </a>
+    </div>
+  </section>
+
+</div>
 
 <script>
-  (function () {
-    var hero = document.getElementById('hero');
-    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+(function () {
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    // Hero recedes slightly as the box rises over it
-    function onScroll() {
-      if (reduce) return;
-      var p = Math.min(1, Math.max(0, window.scrollY / window.innerHeight));
-      hero.style.transform = 'scale(' + (1 - 0.06 * p) + ')';
-      hero.style.opacity = String(1 - 0.7 * p);
-    }
-    window.addEventListener('scroll', onScroll, { passive: true });
-    onScroll();
+  /* ---- sample leads (fictional) ---- */
+  var leads = [
+    ['Sarah Chen',   'VP Sales',            'Brightloop', 'sarah.chen@brightloop.io',   'Viewed pricing',    '#f6c9a8'],
+    ['Marcus Webb',  'Head of Growth',      'Northstack', 'marcus.webb@northstack.io',  'Returned today',    '#bcd4f6'],
+    ['Priya Nair',   'CRO',                 'Loomwave',   'priya@loomwave.com',         'Viewed pricing',    '#c9e8c4'],
+    ['Daniel Ortiz', 'Director of RevOps',  'Cloudmere',  'd.ortiz@cloudmere.io',       '3 visits this week','#e3cdf5'],
+    ['Emily Rhodes', 'VP Marketing',        'Stackhaven', 'emily.rhodes@stackhaven.co', 'Viewed pricing',    '#f9e1a0'],
+    ['Tom Ikeda',    'Founder & CEO',       'Pipelane',   'tom@pipelane.io',            'Returned today',    '#f5bcc4'],
+    ['Hannah Berg',  'Head of Demand Gen',  'Quillbase',  'hannah.berg@quillbase.com',  'Viewed pricing',    '#b9e6e6'],
+    ['Jordan Pike',  'Sales Director',      'Vantora',    'jordan.pike@vantora.io',     '3 visits this week','#d6d6f5']
+  ];
+  var li = '<span class="li"><svg viewBox="0 0 24 24"><path d="M6.940 5a2 2 0 1 1-4-.002 2 2 0 0 1 4 .002zM7 8.480H3V21h4V8.480zm6.320 0H9.340V21h3.940v-6.570c0-3.660 4.770-4 4.770 0V21H22v-7.930c0-6.170-7.060-5.940-8.720-2.910l.04-1.680z"/></svg></span>';
+  function row(l) {
+    var ini = l[0].split(' ').map(function (s) { return s[0]; }).join('');
+    return '<li class="lead"><span class="av" style="background:' + l[5] + '">' + ini + '</span>' +
+      '<div class="who"><div class="n">' + l[0] + '<span class="tag">' + l[4] + '</span></div>' +
+      '<div class="r">' + l[1] + ' · ' + l[2] + '</div><div class="e">' + l[3] + '</div></div>' + li + '</li>';
+  }
+  var html = leads.map(row).join('');
+  document.getElementById('leads').innerHTML = html + html; // doubled for a seamless loop
 
-    // Box blocks brighten as they scroll into view
-    var els = document.querySelectorAll('.reveal');
-    if (!('IntersectionObserver' in window)) { els.forEach(function (e) { e.classList.add('in'); }); return; }
-    var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (en) { if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); } });
-    }, { threshold: 0.35 });
-    els.forEach(function (e) { io.observe(e); });
-  })();
+  /* ---- demo: cursor clicks the brief, list opens and scrolls ---- */
+  var demo = document.getElementById('demo'), hit = document.getElementById('hit'),
+      wrap = document.getElementById('leadsWrap'), cur = document.getElementById('cursor'),
+      rip = document.getElementById('ripple');
+  var timers = [];
+  function later(ms, fn) { timers.push(setTimeout(fn, ms)); }
+  function stop() { timers.forEach(clearTimeout); timers = []; }
+  function target() {
+    var d = demo.getBoundingClientRect(), r = hit.getBoundingClientRect();
+    return { x: r.left - d.left + r.width * 0.6, y: r.top - d.top + r.height * 0.65, w: d.width, h: d.height };
+  }
+  function reset() {
+    wrap.classList.remove('open'); hit.classList.remove('pressed'); cur.classList.remove('click');
+    var t = target();
+    cur.style.transition = 'none'; cur.style.opacity = '0';
+    cur.style.transform = 'translate(' + (t.w * 0.82) + 'px,' + (t.h * 0.78) + 'px)';
+    void cur.offsetWidth;
+  }
+  function play() {
+    reset();
+    later(500, function () {
+      var t = target();
+      cur.style.transition = 'transform 1.3s cubic-bezier(.45,0,.2,1), opacity .4s ease';
+      cur.style.opacity = '1';
+      cur.style.transform = 'translate(' + t.x + 'px,' + t.y + 'px)';
+    });
+    later(1900, function () {
+      var t = target();
+      cur.classList.add('click'); hit.classList.add('pressed');
+      rip.style.left = t.x + 'px'; rip.style.top = t.y + 'px';
+      rip.classList.remove('go'); void rip.offsetWidth; rip.classList.add('go');
+      later(160, function () { cur.classList.remove('click'); });
+    });
+    later(2200, function () { wrap.classList.add('open'); });
+    later(3300, function () { cur.style.opacity = '0'; });
+    later(14500, function () { wrap.classList.remove('open'); hit.classList.remove('pressed'); });
+    later(16200, play);
+  }
+  if (reduce) {
+    wrap.classList.add('open'); hit.classList.add('pressed'); cur.style.display = 'none';
+  } else if ('IntersectionObserver' in window) {
+    new IntersectionObserver(function (es) {
+      es.forEach(function (e) { stop(); if (e.isIntersecting) play(); else reset(); });
+    }, { threshold: 0.5 }).observe(demo);
+  } else { play(); }
+
+  /* ---- stack: previous layer recedes as the next card rises over it ---- */
+  var layers = [
+    { el: document.getElementById('hero'), next: document.getElementById('how'), peek: 76, s: 0.06, o: 0.7 },
+    { el: document.querySelector('#how .inner'), next: document.getElementById('guarantee'), peek: 56, s: 0.05, o: 0.65 },
+    { el: document.querySelector('#guarantee .inner'), next: document.getElementById('get'), peek: 56, s: 0.05, o: 0.65 }
+  ];
+  function onScroll() {
+    if (reduce) return;
+    var vh = window.innerHeight;
+    layers.forEach(function (l) {
+      var base = vh - l.peek, top = l.next.getBoundingClientRect().top;
+      var p = Math.min(1, Math.max(0, (base - top) / base));
+      l.el.style.transform = 'scale(' + (1 - l.s * p) + ')';
+      l.el.style.opacity = String(1 - l.o * p);
+    });
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onScroll);
+  onScroll();
+
+  /* ---- blocks brighten as they scroll into view ---- */
+  var els = document.querySelectorAll('.reveal');
+  if (!('IntersectionObserver' in window)) { els.forEach(function (e) { e.classList.add('in'); }); return; }
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (en) { if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); } });
+  }, { threshold: 0.3 });
+  els.forEach(function (e) { io.observe(e); });
+})();
 </script>
 </body>
 </html>
