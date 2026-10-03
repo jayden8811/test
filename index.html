@@ -10,11 +10,12 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
-    --page: #fcfcfc;
+    --page: #faf7f0;
     --ink: #1a1a1a;
     --muted: #7d7d7d;
     --ic: #6b6b6b;
     --red: #e0434b;
+    --cocoa: #2b2118;
     --orange: #ff6b2c;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -56,17 +57,18 @@
     position: relative; margin: -56px 12px 0; padding: 72px 24px 56px;
     display: grid; place-items: center; text-align: center;
     border-radius: 44px 44px 0 0;
-    box-shadow: 0 -24px 70px rgba(0,0,0,.16), inset 0 1px 0 rgba(255,255,255,.08);
-    --ink: #fff; --muted: rgba(255,255,255,.45); --ic: rgba(255,255,255,.62); --red: #ff6a72;
+    box-shadow: 0 -20px 60px rgba(60,40,10,.12), inset 0 1px 0 rgba(255,255,255,.7);
+    --ink: #1f1a14; --muted: rgba(31,26,20,.48); --ic: rgba(31,26,20,.55); --red: #c9372c;
   }
   .card::before {
     content: ""; position: absolute; inset: 0 0 auto 0; height: 160px; border-radius: inherit;
-    background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,0)); pointer-events: none;
+    background: linear-gradient(180deg, rgba(255,255,255,.45), rgba(255,255,255,0)); pointer-events: none;
   }
   .card.pin { position: sticky; top: 0; height: 100vh; height: 100svh; }
-  .c1 { background: #222222; z-index: 2; margin-top: -76px; }
-  .c2 { background: #1c2b4a; z-index: 3; }
-  .c3 { background: #15332b; z-index: 4; align-items: start; min-height: 100vh; min-height: 100svh; padding-bottom: 140px; }
+  .c1 { background: #f3ead9; z-index: 2; margin-top: -76px; }
+  .c2 { background: #ecdfc4; z-index: 3; }
+  .c3 { background: #e4d3b0; z-index: 4; }
+  .c4 { background: #dcc7a0; z-index: 5; align-items: start; min-height: 100vh; min-height: 100svh; padding-bottom: 140px; }
 
   .card .inner { position: relative; width: 100%; max-width: 760px; display: grid; gap: 22px; will-change: transform, opacity; }
   .reveal { opacity: .2; transform: translateY(18px); transition: opacity .7s ease, transform .7s ease; }
@@ -78,7 +80,7 @@
     position: absolute; inset: 0 0 auto 0; text-align: left;
     background: var(--page); border-radius: 30px; padding: 32px 32px 30px;
     --ink: #1a1a1a; --muted: #7d7d7d; --ic: #6b6b6b; --red: #e0434b;
-    box-shadow: 0 24px 60px rgba(0,0,0,.35);
+    box-shadow: 0 24px 60px rgba(60,40,10,.22);
   }
   .brief .t + .t { margin-top: 14px; }
   .hit {
@@ -122,17 +124,17 @@
   .who .e { font-size: 14px; color: #3d3d3d; margin-top: 1px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .li { flex: none; width: 28px; height: 28px; border-radius: 7px; background: #0a66c2; display: grid; place-items: center; }
   .li svg { width: 16px; height: 16px; fill: #fff; }
-  .sample { position: absolute; left: 0; right: 0; bottom: 0; font-size: 14px; color: rgba(255,255,255,.4); text-align: center; }
+  .sample { position: absolute; left: 0; right: 0; bottom: 0; font-size: 14px; color: rgba(31,26,20,.5); text-align: center; }
 
   /* ---------- CTA ---------- */
   .cta {
     display: flex; align-items: center; justify-content: space-between; gap: 16px;
     max-width: 560px; margin: 56px auto 0; width: 100%;
     padding: 22px 24px; border-radius: 28px; text-decoration: none; color: #fff;
-    background: #0f1f1a; border: 1px solid rgba(255,255,255,.08);
+    background: var(--cocoa); border: 1px solid rgba(0,0,0,.08);
     transition: transform .2s ease, background .2s ease;
   }
-  .cta:hover { transform: translateY(-2px); background: #0c1914; }
+  .cta:hover { transform: translateY(-2px); background: #1f1710; }
   .cta-label { display: flex; align-items: center; gap: 12px; font-size: clamp(19px, 2.2vw, 25px); font-weight: 600; }
   .cta-label .ico { width: 1.1em; height: 1.1em; margin: 0; stroke: #fff; }
   .go {
@@ -163,6 +165,7 @@
   <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></symbol>
   <symbol id="i-alert" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 7v6M12 17h.01"/></symbol>
   <symbol id="i-filter" viewBox="0 0 24 24"><path d="M3 4h18l-7 8.500V19l-4 2v-8.500z"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></symbol>
   <symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></symbol>
 </svg>
 
@@ -173,17 +176,11 @@
     <div class="inner">
       <p class="t g">Meet <span class="dot">P</span>Praz.</p>
       <p class="t">
-        <span class="m">Your ads bring the traffic. Praz brings</span>
+        <span class="m">Your ads bring the traffic, Praz brings</span>
         <b><svg class="ico"><use href="#i-cal"/></svg>booked calls</b>
         <span class="m">from</span>
         <b><svg class="ico"><use href="#i-target"/></svg>high-intent prospects,</b>
         <span class="m">guaranteed.</span>
-      </p>
-      <p class="t">
-        <span class="m">Praz is monitoring</span> <b>your ad traffic</b>
-        <span class="m">and will flag anything</span>
-        <span class="red"><b><svg class="ico"><use href="#i-alert"/></svg>high-intent</b></span>
-        <span class="m">as it happens.</span>
       </p>
     </div>
   </header>
@@ -194,23 +191,35 @@
       <div class="reveal" style="display:grid;gap:22px">
         <p class="t g">How <span class="dot">P</span>Praz works</p>
         <p class="t">
-          <span class="m">We spot the</span>
-          <b><svg class="ico"><use href="#i-eye"/></svg>anonymous visitors</b>
-          <span class="m">on your site, keep only the</span>
+          <span class="m">We identify your</span>
+          <b><svg class="ico"><use href="#i-eye"/></svg>anonymous visitors,</b>
+          <span class="m">filter out the noise and put only</span>
           <b><svg class="ico"><use href="#i-target"/></svg>high-intent buyers</b>
-          <span class="m">and put them on your</span>
+          <span class="m">on your</span>
           <b><svg class="ico"><use href="#i-cal"/></svg>calendar.</b>
-        </p>
-        <p class="t">
-          <span class="m">Competitors, internal traffic and irrelevant industries are</span>
-          <b><svg class="ico"><use href="#i-filter"/></svg>filtered out.</b>
         </p>
       </div>
     </div>
   </section>
 
-  <!-- 2 · Guarantee -->
-  <section class="card c2 pin" id="guarantee">
+  <!-- 2 · Who it's for -->
+  <section class="card c2 pin" id="who">
+    <div class="inner">
+      <div class="reveal" style="display:grid;gap:22px">
+        <p class="t g">Who it's for</p>
+        <p class="t">
+          <span class="m">Built for</span>
+          <b><svg class="ico"><use href="#i-user"/></svg>high-ticket B2B SaaS teams</b>
+          <span class="m">that spend on ads and want</span>
+          <b><svg class="ico"><use href="#i-cal"/></svg>sales calls,</b>
+          <span class="m">not just clicks.</span>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3 · Guarantee -->
+  <section class="card c3 pin" id="guarantee">
     <div class="inner">
       <div class="reveal" style="display:grid;gap:22px">
         <p class="t g">Our guarantee</p>
@@ -218,16 +227,12 @@
           <span class="m">If we don't book you calls,</span>
           <b><svg class="ico"><use href="#i-shield"/></svg>you don't pay.</b>
         </p>
-        <p class="t">
-          <span class="m">Built only for</span> <b>high-ticket B2B SaaS</b>
-          <span class="m">teams running ads.</span>
-        </p>
       </div>
     </div>
   </section>
 
   <!-- 3 · What you get -->
-  <section class="card c3" id="get">
+  <section class="card c4" id="get">
     <div class="inner">
       <div class="reveal" style="display:grid;gap:22px">
         <p class="t g">What you get</p>
@@ -238,9 +243,9 @@
         <div class="brief" id="brief">
           <p class="t g">Good morning, <span class="dot">A</span>Alex!</p>
           <p class="t">
-            <span class="m">Today includes</span>
+            <span class="m">Praz found</span>
             <span class="hit" id="hit"><svg class="ico"><use href="#i-bolt"/></svg><b>12 high-intent leads</b></span>
-            <span class="m">found today.</span>
+            <span class="m">today.</span>
           </p>
 
           <div class="leads-wrap" id="leadsWrap">
@@ -339,7 +344,8 @@
   /* ---- stack: previous layer recedes as the next card rises over it ---- */
   var layers = [
     { el: document.getElementById('hero'), next: document.getElementById('how'), peek: 76, s: 0.06, o: 0.7 },
-    { el: document.querySelector('#how .inner'), next: document.getElementById('guarantee'), peek: 56, s: 0.05, o: 0.65 },
+    { el: document.querySelector('#how .inner'), next: document.getElementById('who'), peek: 56, s: 0.05, o: 0.65 },
+    { el: document.querySelector('#who .inner'), next: document.getElementById('guarantee'), peek: 56, s: 0.05, o: 0.65 },
     { el: document.querySelector('#guarantee .inner'), next: document.getElementById('get'), peek: 56, s: 0.05, o: 0.65 }
   ];
   function onScroll() {
