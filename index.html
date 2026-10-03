@@ -65,24 +65,25 @@
     background: linear-gradient(180deg, rgba(255,255,255,.45), rgba(255,255,255,0)); pointer-events: none;
   }
   .card.pin { position: sticky; top: 0; height: 100vh; height: 100svh; }
-  .c1 { background: #222222; z-index: 2; margin-top: -76px;
-        --ink: #ffffff; --muted: rgba(255,255,255,.45); --ic: rgba(255,255,255,.62); --red: #ff6a72; }
-  .c1::before { background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,0)); }
-  .c2 { background: #f3ead9; z-index: 3; }
-  .c3 { background: #d6dfc9; z-index: 4; }
-  .c4 { background: #f2d5c0; z-index: 5; align-items: start; min-height: 100vh; min-height: 100svh; padding-bottom: 140px; }
+  .c1, .c4 { background: #222222; --ink: #ffffff; --muted: rgba(255,255,255,.45); --ic: rgba(255,255,255,.62); --red: #ff6a72; }
+  .c1::before, .c4::before { background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,0)); }
+  .c1 { z-index: 2; margin-top: -76px; }
+  .c2 { background: #f1efe9; z-index: 3; }
+  .c3 { background: #fcfcfc; z-index: 4; }
+  .c4 { z-index: 5; align-items: start; min-height: 100vh; min-height: 100svh; padding-bottom: 96px; }
+  .c5 { background: #f1efe9; z-index: 6; align-items: start; min-height: 100vh; min-height: 100svh; padding-bottom: 72px; }
 
   .card .inner { position: relative; width: 100%; max-width: 760px; display: grid; gap: 22px; will-change: transform, opacity; }
   .reveal { opacity: .2; transform: translateY(18px); transition: opacity .7s ease, transform .7s ease; }
   .reveal.in { opacity: 1; transform: none; }
 
   /* ---------- Daily brief demo ---------- */
-  .demo { position: relative; width: 100%; max-width: 640px; margin: 18px auto 0; height: 560px; }
+  .demo { position: relative; width: 100%; max-width: 640px; margin: 18px auto 0; height: 530px; }
   .brief {
     position: absolute; inset: 0 0 auto 0; text-align: left;
     background: var(--page); border-radius: 30px; padding: 32px 32px 30px;
     --ink: #1a1a1a; --muted: #7d7d7d; --ic: #6b6b6b; --red: #e0434b;
-    box-shadow: 0 24px 60px rgba(60,40,10,.22);
+    box-shadow: 0 24px 60px rgba(0,0,0,.35);
   }
   .brief .t + .t { margin-top: 14px; }
   .hit {
@@ -126,31 +127,19 @@
   .who .e { font-size: 14px; color: #3d3d3d; margin-top: 1px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .li { flex: none; width: 28px; height: 28px; border-radius: 7px; background: #0a66c2; display: grid; place-items: center; }
   .li svg { width: 16px; height: 16px; fill: #fff; }
-  .sample { position: absolute; left: 0; right: 0; bottom: 0; font-size: 14px; color: rgba(31,26,20,.5); text-align: center; }
 
-  /* ---------- CTA ---------- */
-  .cta {
-    display: flex; align-items: center; justify-content: space-between; gap: 16px;
-    max-width: 560px; margin: 56px auto 0; width: 100%;
-    padding: 22px 24px; border-radius: 28px; text-decoration: none; color: #fff;
-    background: #222222; border: 1px solid rgba(0,0,0,.08);
-    transition: transform .2s ease, background .2s ease;
+  /* ---------- Calendar embed ---------- */
+  .cal {
+    width: 100%; max-width: 760px; margin: 8px auto 0; background: #fff; border-radius: 28px; overflow: hidden;
+    box-shadow: 0 24px 60px rgba(0,0,0,.12);
   }
-  .cta:hover { transform: translateY(-2px); background: #171717; }
-  .cta-label { display: flex; align-items: center; gap: 12px; font-size: clamp(19px, 2.2vw, 25px); font-weight: 600; }
-  .cta-label .ico { width: 1.1em; height: 1.1em; margin: 0; stroke: #fff; }
-  .go {
-    flex: none; width: 72px; height: 72px; border-radius: 50%; display: grid; place-items: center;
-    background: radial-gradient(circle at 35% 25%, #ff8a4f, var(--orange) 70%);
-    box-shadow: 0 6px 18px rgba(255,107,44,.35), inset 0 -3px 6px rgba(0,0,0,.18);
-  }
-  .go svg { width: 28px; height: 28px; fill: none; stroke: #222; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+  .cal iframe { display: block; width: 100%; height: 700px; border: 0; }
 
   @media (max-width: 560px) {
     .card { border-radius: 32px 32px 0 0; margin-inline: 8px; padding-inline: 18px; }
     .brief { padding: 24px 20px; border-radius: 24px; }
-    .demo { height: 540px; }
-    .go { width: 60px; height: 60px; }
+    .demo { height: 520px; }
+    .cal iframe { height: 760px; }
   }
   @media (prefers-reduced-motion: reduce) {
     .reveal { opacity: 1; transform: none; transition: none; }
@@ -262,13 +251,21 @@
         <span class="cursor" id="cursor">
           <svg viewBox="0 0 24 24"><path d="M5 3l14 7-6 2-2 6z" fill="#111" stroke="#fff" stroke-width="1.5" stroke-linejoin="round"/></svg>
         </span>
-        <p class="sample">Sample leads shown for illustration.</p>
       </div>
 
-      <a class="cta reveal" href="#get">
-        <span class="cta-label"><svg class="ico"><use href="#i-cal"/></svg>Book a call</span>
-        <span class="go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 17 17 7M8 7h9v9"/></svg></span>
-      </a>
+    </div>
+  </section>
+
+  <!-- 5 · Book a call -->
+  <section class="card c5" id="book">
+    <div class="inner">
+      <div class="reveal" style="display:grid;gap:22px">
+        <p class="t g">Book a call</p>
+        <p class="t"><span class="m">Pick a</span> <b><svg class="ico"><use href="#i-cal"/></svg>10-minute slot</b> <span class="m">that works for you.</span></p>
+      </div>
+      <div class="cal reveal">
+        <iframe src="https://cal.com/praz-kjqqtj/10min?embed=true&theme=light" title="Book a call with Praz" loading="lazy" allow="payment"></iframe>
+      </div>
     </div>
   </section>
 
