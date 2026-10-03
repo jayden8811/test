@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wallet Tracker</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root { --bg:#fff; --ink:#111; --mute:#8a8a8a; --line:#eee; --pos:#16a34a; --neg:#dc2626; --warn:#d97706; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { background:var(--bg); color:var(--ink); font:14px/1.5 Inter,system-ui,sans-serif; -webkit-font-smoothing:antialiased; }
+  main { max-width:760px; margin:0 auto; padding:56px 20px 96px; }
+  form { display:flex; gap:8px; margin-bottom:48px; }
+  input { flex:1; min-width:0; border:0; border-bottom:1px solid var(--line); padding:10px 0; font:inherit; outline:none; background:none; }
+  input:focus { border-color:var(--ink); }
+  button { border:0; background:var(--ink); color:#fff; font:inherit; padding:8px 16px; border-radius:6px; cursor:pointer; }
+  h1 { font-size:22px; font-weight:600; letter-spacing:-.02em; }
+  .sub { color:var(--mute); margin-top:2px; word-break:break-all; }
+  .verdict { margin:36px 0 8px; font-size:15px; }
+  .verdict b { font-weight:600; }
+  .stats { display:grid; grid-template-columns:repeat(auto-fit,minmax(130px,1fr)); gap:24px 16px; margin:32px 0 40px; }
+  .stat span { display:block; color:var(--mute); font-size:12px; }
+  .stat strong { font-size:18px; font-weight:500; letter-spacing:-.01em; }
+  h2 { font-size:12px; font-weight:500; color:var(--mute); text-transform:uppercase; letter-spacing:.06em; margin:40px 0 8px; }
+  .row { display:flex; gap:12px; padding:9px 0; border-top:1px solid var(--line); align-items:baseline; }
+  .row .l { flex:1; min-width:0; }
+  .row .l div { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .row .l small { color:var(--mute); font-size:12px; }
+  .row .r { text-align:right; white-space:nowrap; }
+  .dot { display:inline-block; width:7px; height:7px; border-radius:50%; margin-right:10px; }
+  .pos { color:var(--pos); } .neg { color:var(--neg); }
+  .msg { color:var(--mute); }
+</style>
+</head>
+<body>
+<main>
+  <form id="f">
+    <input id="addr" placeholder="Wallet address 0x…" autocomplete="off" spellcheck="false">
+    <button>Analyze</button>
+  </form>
+  <div id="out"></div>
+</main>
+<script>
+const DATA = 'https://data-api.polymarket.com', GAMMA = 'https://gamma-api.polymarket.com';
+const DEFAULT = '0x6011655c4afb76f36dd1b08a137a1ba73466b31e';
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const usd = n => (n < 0 ? '-' : '') + '$' + Math.abs(n).toLocaleString(undefined, {maximumFractionDigits: Math.abs(n) < 100 ? 2 : 0});
+const pct = n => (n * 100).toFixed(0) + '%';
+const median = a => { if (!a.length) return 0; const s = [...a].sort((x, y) => x - y), m = s.length >> 1; return s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2; };
+const ago = ts => { const d = (Date.now() / 1000 - ts); return d < 3600 ? Math.max(1, d / 60 | 0) + 'm ago' : d < 86400 ? (d / 3600 | 0) + 'h ago' : (d / 86400 | 0) + 'd ago'; };
+
+async function get(url) {
+  const r = await fetch(url);
+  if (!r.ok) throw new Error(r.status + ' ' + url.split('?')[0]);
+  return r.json();
+}
+async function paged(path, user, page, max) {
+  let all = [];
+  for (let off = 0; off < max; off += page) {
+    const batch = await get(`${DATA}${path}?user=${user}&limit=${page}&offset=${off}`).catch(() => []);
+    all = all.concat(batch);
+    if (batch.length < page) break;
+  }
+  return all;
+}
+
+async function analyze(addr) {
+  const out = $('out');
+  if (!/^0x[a-fA-F0-9]{40}$/.test(addr)) { out.innerHTML = '<p class="msg">Enter a valid 0x wallet address.</p>'; return; }
+  addr = addr.toLowerCase();
+  history.replaceState(null, '', '#' + addr);
+  out.innerHTML = '<p class="msg">Loading…</p>';
+  try {
+    const [profile, value, positions, closed, activity] = await Promise.all([
+      get(`${GAMMA}/public-profile?address=${addr}`).catch(() => ({})),
+      get(`${DATA}/value?user=${addr}`).catch(() => []),
+      paged('/positions', addr, 500, 1000),
+      paged('/closed-positions', addr, 50, 500),
+      paged('/activity', addr, 500, 3000),
+    ]);
+    render(addr, profile, value?.[0]?.value ?? 0, positions, closed, activity);
+  } catch (e) {
+    out.innerHTML = `<p class="msg">Could not load data (${esc(e.message)}).</p>`;
+  }
+}
+
+function render(addr, profile, value, positions, closed, activity) {
+  const trades = activity.filter(a => a.type === 'TRADE');
+  const buys = trades.filter(t => t.side === 'BUY');
+  const now = Date.now() / 1000;
+
+  const realized = closed.reduce((s, p) => s + (p.realizedPnl || 0), 0);
+  const unrealized = positions.reduce((s, p) => s + (p.cashPnl || 0), 0);
+  const wins = closed.filter(p => p.realizedPnl > 0).length;
+  const winRate = closed.length ? wins / closed.length : 0;
+  const medSize = median(trades.map(t => t.usdcSize || 0));
+  const medBuyPrice = median(buys.map(t => t.price || 0));
+  const lastTs = trades.length ? Math.max(...trades.map(t => t.timestamp)) : 0;
+  const firstTs = trades.length ? Math.min(...trades.map(t => t.timestamp)) : now;
+  const spanDays = Math.max(1, (now - firstTs) / 86400);
+  const perDay = trades.length / spanDays;
+  const volume = trades.reduce((s, t) => s + (t.usdcSize || 0), 0);
+  const byMarket = {};
+  trades.forEach(t => byMarket[t.title] = (byMarket[t.title] || 0) + (t.usdcSize || 0));
+  const topShare = volume ? Math.max(0, ...Object.values(byMarket)) / volume : 0;
+  const nearOneBuys = buys.length ? buys.filter(t => t.price >= 0.95).length / buys.length : 0;
+
+  // Copyability checks: [label, pass(true)/warn(null)/fail(false), detail]
+  const checks = [
+    ['Profitable', realized > 0, usd(realized) + ' realized'],
+    ['Consistent', closed.length >= 30 ? winRate >= 0.5 : null, closed.length >= 30 ? pct(winRate) + ' win rate' : 'only ' + closed.length + ' closed positions'],
+    ['Human pace', perDay <= 100, perDay.toFixed(0) + ' trades / day'],
+    ['Copyable sizing', medSize >= 5, 'median trade ' + usd(medSize)],
+    ['Room to profit', nearOneBuys < 0.4, pct(nearOneBuys) + ' of buys at 95¢+'],
+    ['Diversified', topShare < 0.5, pct(topShare) + ' of volume in one market'],
+    ['Active', now - lastTs < 7 * 86400, lastTs ? 'last trade ' + ago(lastTs) : 'no trades'],
+  ];
+  const score = checks.reduce((s, c) => s + (c[1] === true ? 1 : c[1] === null ? .5 : 0), 0) / checks.length;
+  const hard = !checks[0][1] || !checks[2][1];
+  const [label, color] = hard || score < .5 ? ['Not copyable', 'var(--neg)'] : score < .8 ? ['Maybe', 'var(--warn)'] : ['Copyable', 'var(--pos)'];
+  const name = profile.name || profile.pseudonym || 'Wallet';
+
+  const stat = (k, v, cls = '') => `<div class="stat"><span>${k}</span><strong class="${cls}">${v}</strong></div>`;
+  const row = (l, s, r, rc = '') => `<div class="row"><div class="l"><div>${l}</div><small>${s}</small></div><div class="r ${rc}">${r}</div></div>`;
+
+  const openRows = [...positions].sort((a, b) => b.currentValue - a.currentValue).slice(0, 8)
+    .map(p => row(esc(p.title), `${esc(p.outcome)} · avg ${(p.avgPrice * 100).toFixed(0)}¢ → ${(p.curPrice * 100).toFixed(0)}¢`, usd(p.currentValue) + `<br><small class="${p.cashPnl >= 0 ? 'pos' : 'neg'}">${usd(p.cashPnl)}</small>`)).join('');
+  const tradeRows = trades.slice(0, 12)
+    .map(t => row(esc(t.title), `${t.side} ${esc(t.outcome)} @ ${(t.price * 100).toFixed(0)}¢ · ${ago(t.timestamp)}`, usd(t.usdcSize))).join('');
+
+  $('out').innerHTML = `
+    <h1>${esc(name)}</h1>
+    <div class="sub">${addr}</div>
+    <div class="verdict"><span class="dot" style="background:${color}"></span><b>${label}</b> · ${Math.round(score * 100)}/100</div>
+    <div>${checks.map(c => `<div class="row"><div class="l"><span class="dot" style="background:${c[1] === true ? 'var(--pos)' : c[1] === null ? 'var(--warn)' : 'var(--neg)'}"></span>${c[0]}</div><div class="r" style="color:var(--mute)">${esc(c[2])}</div></div>`).join('')}</div>
+    <div class="stats">
+      ${stat('Portfolio', usd(value))}
+      ${stat('Realized P&L', usd(realized), realized >= 0 ? 'pos' : 'neg')}
+      ${stat('Open P&L', usd(unrealized), unrealized >= 0 ? 'pos' : 'neg')}
+      ${stat('Win rate', closed.length ? pct(winRate) : '–')}
+      ${stat('Trades', trades.length.toLocaleString() + (trades.length >= 3000 ? '+' : ''))}
+      ${stat('Median buy', (medBuyPrice * 100).toFixed(0) + '¢')}
+    </div>
+    <h2>Open positions</h2>${openRows || '<p class="msg">None</p>'}
+    <h2>Recent trades</h2>${tradeRows || '<p class="msg">None</p>'}
+    <p class="msg" style="margin-top:40px;font-size:12px">Based on up to ${trades.length.toLocaleString()} recent trades and ${closed.length} closed positions. Not financial advice.</p>`;
+}
+
+$('f').onsubmit = e => { e.preventDefault(); analyze($('addr').value.trim()); };
+const start = location.hash.slice(1) || DEFAULT;
+$('addr').value = start;
+analyze(start);
+</script>
+</body>
+</html>
