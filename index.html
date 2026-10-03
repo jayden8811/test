@@ -10,7 +10,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
-    --page: #faf7f0;
+    --page: #fcfcfc;
     --ink: #1a1a1a;
     --muted: #7d7d7d;
     --ic: #6b6b6b;
@@ -57,7 +57,7 @@
     position: relative; margin: -56px 12px 0; padding: 72px 24px 56px;
     display: grid; place-items: center; text-align: center;
     border-radius: 44px 44px 0 0;
-    box-shadow: 0 -20px 60px rgba(60,40,10,.12), inset 0 1px 0 rgba(255,255,255,.7);
+    box-shadow: 0 -20px 60px rgba(0,0,0,.12), inset 0 1px 0 rgba(255,255,255,.7);
     --ink: #1f1a14; --muted: rgba(31,26,20,.48); --ic: rgba(31,26,20,.55); --red: #c9372c;
   }
   .card::before {
@@ -65,10 +65,12 @@
     background: linear-gradient(180deg, rgba(255,255,255,.45), rgba(255,255,255,0)); pointer-events: none;
   }
   .card.pin { position: sticky; top: 0; height: 100vh; height: 100svh; }
-  .c1 { background: #f3ead9; z-index: 2; margin-top: -76px; }
-  .c2 { background: #ecdfc4; z-index: 3; }
-  .c3 { background: #e4d3b0; z-index: 4; }
-  .c4 { background: #dcc7a0; z-index: 5; align-items: start; min-height: 100vh; min-height: 100svh; padding-bottom: 140px; }
+  .c1 { background: #222222; z-index: 2; margin-top: -76px;
+        --ink: #ffffff; --muted: rgba(255,255,255,.45); --ic: rgba(255,255,255,.62); --red: #ff6a72; }
+  .c1::before { background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,0)); }
+  .c2 { background: #f3ead9; z-index: 3; }
+  .c3 { background: #d6dfc9; z-index: 4; }
+  .c4 { background: #f2d5c0; z-index: 5; align-items: start; min-height: 100vh; min-height: 100svh; padding-bottom: 140px; }
 
   .card .inner { position: relative; width: 100%; max-width: 760px; display: grid; gap: 22px; will-change: transform, opacity; }
   .reveal { opacity: .2; transform: translateY(18px); transition: opacity .7s ease, transform .7s ease; }
@@ -131,10 +133,10 @@
     display: flex; align-items: center; justify-content: space-between; gap: 16px;
     max-width: 560px; margin: 56px auto 0; width: 100%;
     padding: 22px 24px; border-radius: 28px; text-decoration: none; color: #fff;
-    background: var(--cocoa); border: 1px solid rgba(0,0,0,.08);
+    background: #222222; border: 1px solid rgba(0,0,0,.08);
     transition: transform .2s ease, background .2s ease;
   }
-  .cta:hover { transform: translateY(-2px); background: #1f1710; }
+  .cta:hover { transform: translateY(-2px); background: #171717; }
   .cta-label { display: flex; align-items: center; gap: 12px; font-size: clamp(19px, 2.2vw, 25px); font-weight: 600; }
   .cta-label .ico { width: 1.1em; height: 1.1em; margin: 0; stroke: #fff; }
   .go {
@@ -342,6 +344,26 @@
       es.forEach(function (e) { stop(); if (e.isIntersecting) play(); else reset(); });
     }, { threshold: 0.5 }).observe(demo);
   } else { play(); }
+
+  /* ---- smooth, slightly delayed wheel scrolling ---- */
+  if (!reduce) {
+    var goal = window.scrollY, pos = window.scrollY, raf = 0;
+    var max = function () { return document.documentElement.scrollHeight - window.innerHeight; };
+    var step = function () {
+      pos += (goal - pos) * 0.085;
+      if (Math.abs(goal - pos) < 0.4) { pos = goal; raf = 0; window.scrollTo(0, pos); return; }
+      window.scrollTo(0, pos);
+      raf = requestAnimationFrame(step);
+    };
+    window.addEventListener('wheel', function (e) {
+      if (e.ctrlKey || e.metaKey) return;
+      e.preventDefault();
+      var dy = e.deltaMode === 1 ? e.deltaY * 32 : e.deltaMode === 2 ? e.deltaY * window.innerHeight : e.deltaY;
+      goal = Math.min(max(), Math.max(0, goal + dy));
+      if (!raf) { pos = window.scrollY; raf = requestAnimationFrame(step); }
+    }, { passive: false });
+    window.addEventListener('scroll', function () { if (!raf) { goal = pos = window.scrollY; } }, { passive: true });
+  }
 
   /* ---- stack: previous layer recedes as the next card rises over it ---- */
   var layers = [
