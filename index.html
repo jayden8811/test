@@ -58,6 +58,31 @@
     transform-origin: 50% 40%;
   }
   .hero .inner { max-width: 760px; }
+  .hero .t { font-weight: 600; color: var(--ink); }
+  .hero .t .m, .hero .t b { color: var(--ink); font-weight: 600; }
+
+  /* iPhone-style text selection highlight */
+  .sel {
+    position: relative; white-space: nowrap; background: #cbe6ff; border-radius: 4px; padding: 0 .05em; margin: 0 -.05em;
+    -webkit-box-decoration-break: clone; box-decoration-break: clone;
+    animation: selIn .5s ease both;
+  }
+  .sel::before, .sel::after {
+    content: ""; position: absolute; width: 12px; height: calc(1.2em + 6px); pointer-events: none; opacity: 0;
+    animation: handleIn .35s ease .55s both;
+  }
+  .sel::before { left: -6px; top: -6px;
+    background:
+      radial-gradient(circle at 50% 6px, #0a84ff 5.5px, transparent 6px),
+      linear-gradient(#0a84ff, #0a84ff) 50% 6px / 2px calc(100% - 6px) no-repeat; }
+  .sel::after { right: -6px; bottom: -6px;
+    background:
+      radial-gradient(circle at 50% calc(100% - 6px), #0a84ff 5.5px, transparent 6px),
+      linear-gradient(#0a84ff, #0a84ff) 50% 0 / 2px calc(100% - 6px) no-repeat; }
+  .sel.two, .sel.two::before, .sel.two::after { animation-delay: .35s; }
+  .sel.two::before, .sel.two::after { animation-delay: .9s; }
+  @keyframes selIn { from { background-color: transparent; } to { background-color: #cbe6ff; } }
+  @keyframes handleIn { from { opacity: 0; transform: scale(.6); } to { opacity: 1; transform: none; } }
 
   .card {
     position: relative; margin: -56px 12px 0; padding: 72px 24px 56px;
@@ -148,7 +173,8 @@
   }
   @media (prefers-reduced-motion: reduce) {
     .reveal { opacity: 1; transform: none; transition: none; }
-    .call, .box.active::after, .box.caret::after { animation: none; }
+    .call, .box.active::after, .box.caret::after, .sel, .sel::before, .sel::after { animation: none; }
+    .sel::before, .sel::after { opacity: 1; }
   }
 </style>
 </head>
@@ -166,10 +192,9 @@
   <header class="hero" id="hero">
     <div class="inner">
       <p class="t">
-        <span class="m">Tell us your</span> <b>ideal customer</b>
-        <span class="m">and share your</span> <b>calendar link,</b>
-        <span class="m">and Praz fills it with</span> <b>booked calls</b>
-        <span class="m">from high-intent prospects.</span>
+        Tell us your <span class="sel">ideal customer</span>
+        and share your <span class="sel two">calendar link,</span>
+        and Praz fills it with booked calls from high-intent prospects.
       </p>
     </div>
   </header>
