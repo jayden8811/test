@@ -1,0 +1,368 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Praz — Dashboard</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --page: #fcfcfc;
+    --ink: #1a1a1a;
+    --muted: #7d7d7d;
+    --ic: #6b6b6b;
+    --orange: #ff6b2c;
+    --line: #ececec;
+    --offwhite: #f1efe9;
+    --gray: #222222;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { background: var(--page); }
+  body {
+    background: var(--page); color: var(--ink);
+    font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    -webkit-font-smoothing: antialiased; letter-spacing: -0.01em;
+    min-height: 100vh;
+  }
+  button, input, select { font: inherit; color: inherit; letter-spacing: inherit; }
+  button { cursor: pointer; border: 0; background: none; }
+
+  /* ---------- Type: one size, muted + bold phrases ---------- */
+  .t { font-size: clamp(19px, 2.2vw, 25px); line-height: 1.45; font-weight: 400; color: var(--ink); }
+  .t.g { font-weight: 500; }
+  .t .m { color: var(--muted); }
+  .t b { font-weight: 600; color: var(--ink); }
+  .ico {
+    display: inline-block; width: .9em; height: .9em; vertical-align: -0.1em; margin: 0 .2em 0 .1em;
+    fill: none; stroke: var(--ic); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round;
+  }
+  .mark { display: inline-block; width: 1.05em; height: 1.05em; margin: 0 .25em; vertical-align: -0.16em; background: url(logo.png) center / contain no-repeat; }
+
+  /* ---------- Nav (same as landing page) ---------- */
+  .nav {
+    position: fixed; top: 14px; left: 50%; transform: translateX(-50%); z-index: 50;
+    width: min(820px, calc(100% - 24px)); height: 48px; padding: 0 8px 0 20px;
+    display: grid; grid-template-columns: 1fr auto 1fr; align-items: center;
+    background: var(--gray); border-radius: 18px; border: 1px solid rgba(255,255,255,.1);
+    box-shadow: 0 10px 30px rgba(0,0,0,.18); color: #fff; font-size: 14px; font-weight: 500;
+  }
+  .nav a { color: inherit; text-decoration: none; white-space: nowrap; }
+  .nav .back { justify-self: start; opacity: .85; transition: opacity .2s ease; }
+  .nav .back:hover { opacity: 1; }
+  .nav .logo { display: flex; align-items: center; gap: 2px; font-size: 18px; font-weight: 600; letter-spacing: -0.02em; }
+  .nav .logo .mark { width: 20px; height: 20px; margin: 0 2px 0 0; vertical-align: 0; }
+  .nav .book { justify-self: end; padding: 7px 14px; border-radius: 12px; background: #fcfcfc; color: #1a1a1a; font-weight: 600; }
+
+  /* ---------- Page ---------- */
+  main { max-width: 980px; margin: 0 auto; padding: 120px 12px 80px; display: grid; gap: 40px; }
+  .hello { text-align: center; display: grid; gap: 14px; padding: 8px 12px 0; }
+
+  .panel {
+    border-radius: 40px; padding: clamp(28px, 4vw, 48px) clamp(14px, 3vw, 36px) clamp(14px, 3vw, 36px);
+    box-shadow: 0 -12px 40px rgba(0,0,0,.06), inset 0 1px 0 rgba(255,255,255,.7);
+  }
+  .panel.dark { background: var(--gray); box-shadow: 0 20px 50px rgba(0,0,0,.18); }
+  .panel.light { background: var(--offwhite); }
+  .panel.dark .t { --ink: #fff; --muted: rgba(255,255,255,.45); --ic: rgba(255,255,255,.62); color: #fff; }
+  .panel .head { text-align: center; display: grid; gap: 14px; margin-bottom: 28px; padding: 0 8px; }
+  .panel .head .t { color: var(--ink); }
+  .panel.dark .head .t { color: #fff; }
+  .panel.dark .head .t b { color: #fff; }
+  .panel.dark .head .t .m { color: rgba(255,255,255,.45); }
+  .panel.light .head .t { color: var(--ink); }
+
+  /* ---------- Sheet (white card, like the "What you get" brief) ---------- */
+  .sheet { background: var(--page); border-radius: 28px; padding: 14px 22px 8px; box-shadow: 0 24px 60px rgba(0,0,0,.22); }
+  .panel.light .sheet { box-shadow: 0 20px 50px rgba(0,0,0,.08); }
+  .tools { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; padding: 8px 0 14px; border-bottom: 1px solid var(--line); }
+  .search {
+    flex: 1 1 200px; display: flex; align-items: center; gap: 8px; padding: 9px 14px; border-radius: 14px;
+    background: #f4f4f2; border: 1px solid transparent; transition: border-color .2s ease, background .2s ease;
+  }
+  .search:focus-within { border-color: #d6d6d6; background: #fff; }
+  .search svg { width: 16px; height: 16px; fill: none; stroke: #8a8a8a; stroke-width: 2.4; stroke-linecap: round; flex: none; }
+  .search input { flex: 1; border: 0; outline: 0; background: none; font-size: 15px; min-width: 0; }
+  .chips { display: flex; gap: 8px; flex-wrap: wrap; }
+  .chip {
+    padding: 7px 12px; border-radius: 999px; font-size: 14px; font-weight: 500; color: #555;
+    background: #f4f4f2; transition: background .2s ease, color .2s ease;
+  }
+  .chip:hover { background: #ebebe8; }
+  .chip.on { background: var(--gray); color: #fff; }
+  .chip .n { opacity: .6; margin-left: 4px; font-weight: 400; }
+
+  ul.rows { list-style: none; }
+  .lead { display: flex; align-items: center; gap: 14px; padding: 14px 0; border-bottom: 1px solid #f0f0f0; }
+  .lead:last-child { border-bottom: 0; }
+  .lead.enter { animation: enter .5s cubic-bezier(.2,.8,.2,1); }
+  @keyframes enter { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: none; } }
+  .av { flex: none; width: 42px; height: 42px; border-radius: 50%; display: grid; place-items: center; font-size: 15px; font-weight: 600; color: #1a1a1a; }
+  .who { flex: 1; min-width: 0; text-align: left; }
+  .who .n { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; font-size: 16px; font-weight: 600; color: #1a1a1a; }
+  .tag { font-size: 12px; font-weight: 500; color: #b4531a; background: rgba(255,107,44,.14); padding: 2px 8px; border-radius: 999px; }
+  .when { font-size: 12px; font-weight: 400; color: #9a9a9a; }
+  .who .r { font-size: 14px; color: #7d7d7d; margin-top: 1px; }
+  .who .e { font-size: 14px; color: #3d3d3d; margin-top: 1px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .acts { display: flex; align-items: center; gap: 10px; flex: none; }
+  .li { width: 30px; height: 30px; border-radius: 8px; background: #0a66c2; display: grid; place-items: center; transition: transform .15s ease; }
+  .li:hover { transform: translateY(-1px); }
+  .li svg { width: 16px; height: 16px; fill: #fff; }
+
+  /* plus button box */
+  .add {
+    width: 34px; height: 34px; border-radius: 10px; border: 1.5px solid #d4d4d0; display: grid; place-items: center;
+    background: #fff; transition: transform .15s ease, background .2s ease, border-color .2s ease;
+  }
+  .add svg { width: 16px; height: 16px; fill: none; stroke: #1a1a1a; stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; transition: transform .25s ease; }
+  .add:hover { transform: translateY(-1px); border-color: #1a1a1a; }
+  .add:active { transform: scale(.94); }
+  .add.on { background: var(--orange); border-color: var(--orange); }
+  .add.on svg { stroke: #222; }
+  .rm { width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center; color: #8a8a8a; transition: background .2s ease, color .2s ease; }
+  .rm:hover { background: #f1f1ee; color: #1a1a1a; }
+  .rm svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; }
+
+  /* status select */
+  .status {
+    appearance: none; -webkit-appearance: none; border: 0; outline: 0; cursor: pointer;
+    padding: 7px 28px 7px 12px; border-radius: 999px; font-size: 13px; font-weight: 600;
+    background-repeat: no-repeat; background-position: right 10px center; background-size: 10px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23000' stroke-opacity='.55' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  }
+  .s-new       { background-color: #e8e8e4; color: #3d3d3d; }
+  .s-contacted { background-color: #fde7c2; color: #8a5a00; }
+  .s-replied   { background-color: #d9e8fb; color: #1b4f8f; }
+  .s-booked    { background-color: #d4f0d9; color: #1d6b32; }
+  .s-lost      { background-color: #f6d8d8; color: #9a2b2b; }
+
+  .empty { text-align: center; padding: 44px 12px 40px; }
+  .empty .t { font-size: clamp(17px, 1.9vw, 21px); }
+
+  .count-note { text-align: center; margin-top: 18px; color: rgba(255,255,255,.4); font-size: 14px; }
+
+  footer { text-align: center; color: #9a9a9a; font-size: 14px; }
+
+  @media (max-width: 640px) {
+    .nav { padding: 0 6px 0 14px; height: 46px; font-size: 13px; }
+    .nav .logo { font-size: 16px; }
+    .nav .book { padding: 7px 11px; }
+    main { padding-top: 96px; }
+    .sheet { padding: 8px 14px 4px; border-radius: 22px; }
+    .panel { border-radius: 30px; }
+    .lead { flex-wrap: wrap; row-gap: 10px; }
+    .who { flex-basis: calc(100% - 60px); }
+    .acts { width: 100%; justify-content: flex-end; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav" aria-label="Main">
+  <a class="back" href="index.html">&larr; Home</a>
+  <a class="logo" href="index.html" aria-label="Praz home"><span class="mark" role="img" aria-label="Praz logo"></span>Praz</a>
+  <a class="book" href="index.html#book">Book a call</a>
+</nav>
+
+<main>
+
+  <header class="hello">
+    <p class="t g">Good morning, Alex!</p>
+    <p class="t">
+      <span class="m">Praz found</span>
+      <b><svg class="ico" viewBox="0 0 24 24"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg><span id="found">0</span> high-intent leads</b>
+      <span class="m">so far today, and you're tracking</span>
+      <b><span id="tracking">0</span> of them.</b>
+    </p>
+  </header>
+
+  <!-- 1 · High-intent leads -->
+  <section class="panel dark" id="leads-panel" aria-labelledby="leads-title">
+    <div class="head">
+      <h2 class="t g" id="leads-title" style="margin:0">High-Intent leads <span aria-hidden="true">🔥</span></h2>
+      <p class="t"><span class="m">Tap the</span> <b>+</b> <span class="m">to add a lead to your list and track it.</span></p>
+    </div>
+    <div class="sheet">
+      <div class="tools">
+        <label class="search">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.500-3.500"/></svg>
+          <input id="q" type="search" placeholder="Search name, company or email" autocomplete="off">
+        </label>
+      </div>
+      <ul class="rows" id="leads"></ul>
+      <div class="empty" id="leads-empty" hidden><p class="t"><span class="m">No leads match your search.</span></p></div>
+    </div>
+  </section>
+
+  <!-- 2 · My list -->
+  <section class="panel light" id="list-panel" aria-labelledby="list-title">
+    <div class="head">
+      <h2 class="t g" id="list-title" style="margin:0">My list</h2>
+      <p class="t"><span class="m">Update the</span> <b>status</b> <span class="m">of every lead you're working.</span></p>
+    </div>
+    <div class="sheet">
+      <div class="tools"><div class="chips" id="filters" role="tablist" aria-label="Filter by status"></div></div>
+      <ul class="rows" id="list"></ul>
+      <div class="empty" id="list-empty" hidden>
+        <p class="t"><span class="m">Nothing here yet. Tap the</span> <b>+</b> <span class="m">on a high-intent lead to start tracking it.</span></p>
+      </div>
+    </div>
+  </section>
+
+  <footer>Placeholder data shown. Your list is saved in this browser.</footer>
+</main>
+
+<script>
+(function () {
+  /* ---------------- Placeholder data (swap for real leads later) ---------------- */
+  var LEADS = [
+    { id: 'l1',  name: 'Sarah Chen',    role: 'VP Sales',            company: 'Brightloop', email: 'sarah.chen@brightloop.io',   signal: 'Viewed pricing',     when: '4m ago',  color: '#f6c9a8', linkedin: '#' },
+    { id: 'l2',  name: 'Marcus Webb',   role: 'Head of Growth',      company: 'Northstack', email: 'marcus.webb@northstack.io',  signal: 'Returned today',     when: '11m ago', color: '#bcd4f6', linkedin: '#' },
+    { id: 'l3',  name: 'Priya Nair',    role: 'CRO',                 company: 'Loomwave',   email: 'priya@loomwave.com',         signal: 'Viewed pricing',     when: '25m ago', color: '#c9e8c4', linkedin: '#' },
+    { id: 'l4',  name: 'Daniel Ortiz',  role: 'Director of RevOps',  company: 'Cloudmere',  email: 'd.ortiz@cloudmere.io',       signal: '3 visits this week', when: '38m ago', color: '#e3cdf5', linkedin: '#' },
+    { id: 'l5',  name: 'Emily Rhodes',  role: 'VP Marketing',        company: 'Stackhaven', email: 'emily.rhodes@stackhaven.co', signal: 'Viewed pricing',     when: '52m ago', color: '#f9e1a0', linkedin: '#' },
+    { id: 'l6',  name: 'Tom Ikeda',     role: 'Founder & CEO',       company: 'Pipelane',   email: 'tom@pipelane.io',            signal: 'Returned today',     when: '1h ago',  color: '#f5bcc4', linkedin: '#' },
+    { id: 'l7',  name: 'Hannah Berg',   role: 'Head of Demand Gen',  company: 'Quillbase',  email: 'hannah.berg@quillbase.com',  signal: 'Viewed pricing',     when: '1h ago',  color: '#b9e6e6', linkedin: '#' },
+    { id: 'l8',  name: 'Jordan Pike',   role: 'Sales Director',      company: 'Vantora',    email: 'jordan.pike@vantora.io',     signal: '3 visits this week', when: '2h ago',  color: '#d6d6f5', linkedin: '#' },
+    { id: 'l9',  name: 'Aisha Rahman',  role: 'VP Revenue',          company: 'Fluxbase',   email: 'aisha@fluxbase.io',          signal: 'Viewed pricing',     when: '2h ago',  color: '#f6c9a8', linkedin: '#' },
+    { id: 'l10', name: 'Lucas Meyer',   role: 'Head of Sales',       company: 'Orbitly',    email: 'lucas.meyer@orbitly.com',    signal: 'Returned today',     when: '3h ago',  color: '#c9e8c4', linkedin: '#' },
+    { id: 'l11', name: 'Grace Okafor',  role: 'CMO',                 company: 'Nimbusly',   email: 'grace@nimbusly.io',          signal: 'Viewed pricing',     when: '3h ago',  color: '#bcd4f6', linkedin: '#' },
+    { id: 'l12', name: 'Ethan Brooks',  role: 'Director of Growth',  company: 'Salvio',     email: 'ethan.brooks@salvio.co',     signal: '3 visits this week', when: '4h ago',  color: '#f9e1a0', linkedin: '#' }
+  ];
+  var STATUSES = [
+    { key: 'new',       label: 'New lead' },
+    { key: 'contacted', label: 'Contacted' },
+    { key: 'replied',   label: 'Replied' },
+    { key: 'booked',    label: 'Call booked' },
+    { key: 'lost',      label: 'Not a fit' }
+  ];
+
+  /* ---------------- State (saved in localStorage) ---------------- */
+  var KEY = 'praz_dashboard_list_v1';
+  var list = [];            // [{ id, status }]
+  var filter = 'all';
+  var query = '';
+  var justAdded = null;
+
+  function load() {
+    try {
+      var raw = localStorage.getItem(KEY);
+      var parsed = raw ? JSON.parse(raw) : [];
+      list = Array.isArray(parsed) ? parsed.filter(function (x) { return x && byId(x.id); }) : [];
+    } catch (e) { list = []; }
+  }
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(list)); } catch (e) {} }
+
+  function byId(id) { for (var i = 0; i < LEADS.length; i++) if (LEADS[i].id === id) return LEADS[i]; return null; }
+  function entry(id) { for (var i = 0; i < list.length; i++) if (list[i].id === id) return list[i]; return null; }
+  function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+  function initials(n) { return n.split(' ').map(function (s) { return s[0]; }).join(''); }
+
+  /* ---------------- Markup helpers ---------------- */
+  var LI = '<svg viewBox="0 0 24 24"><path d="M6.940 5a2 2 0 1 1-4-.002 2 2 0 0 1 4 .002zM7 8.480H3V21h4V8.480zm6.320 0H9.340V21h3.940v-6.570c0-3.660 4.770-4 4.770 0V21H22v-7.930c0-6.170-7.060-5.940-8.720-2.910l.04-1.680z"/></svg>';
+  var PLUS = '<svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>';
+  var CHECK = '<svg viewBox="0 0 24 24"><path d="m5 12.500 4.500 4.500L19 7.500"/></svg>';
+  var X = '<svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg>';
+
+  function person(l, withWhen) {
+    return '<span class="av" style="background:' + l.color + '">' + esc(initials(l.name)) + '</span>' +
+      '<div class="who"><div class="n">' + esc(l.name) + '<span class="tag">' + esc(l.signal) + '</span>' +
+      (withWhen ? '<span class="when">' + esc(l.when) + '</span>' : '') + '</div>' +
+      '<div class="r">' + esc(l.role) + ' &middot; ' + esc(l.company) + '</div>' +
+      '<div class="e">' + esc(l.email) + '</div></div>';
+  }
+  function liLink(l) { return '<a class="li" href="' + esc(l.linkedin) + '" aria-label="LinkedIn profile for ' + esc(l.name) + '" target="_blank" rel="noopener">' + LI + '</a>'; }
+
+  /* ---------------- Render ---------------- */
+  var elLeads = document.getElementById('leads'), elLeadsEmpty = document.getElementById('leads-empty'),
+      elList = document.getElementById('list'), elListEmpty = document.getElementById('list-empty'),
+      elFilters = document.getElementById('filters'), elQ = document.getElementById('q');
+
+  function renderLeads() {
+    var q = query.trim().toLowerCase();
+    var shown = LEADS.filter(function (l) {
+      return !q || (l.name + ' ' + l.company + ' ' + l.email + ' ' + l.role).toLowerCase().indexOf(q) !== -1;
+    });
+    elLeads.innerHTML = shown.map(function (l) {
+      var on = !!entry(l.id);
+      return '<li class="lead">' + person(l, true) +
+        '<div class="acts">' + liLink(l) +
+        '<button class="add' + (on ? ' on' : '') + '" data-add="' + l.id + '" aria-pressed="' + on + '" aria-label="' + (on ? 'Remove ' : 'Add ') + esc(l.name) + (on ? ' from' : ' to') + ' my list" title="' + (on ? 'In your list. Tap to remove' : 'Add to my list') + '">' + (on ? CHECK : PLUS) + '</button>' +
+        '</div></li>';
+    }).join('');
+    elLeadsEmpty.hidden = shown.length > 0;
+  }
+
+  function statusSelect(e) {
+    return '<select class="status s-' + e.status + '" data-status="' + e.id + '" aria-label="Status">' +
+      STATUSES.map(function (s) { return '<option value="' + s.key + '"' + (s.key === e.status ? ' selected' : '') + '>' + s.label + '</option>'; }).join('') +
+      '</select>';
+  }
+
+  function renderFilters() {
+    var chips = [{ key: 'all', label: 'All' }].concat(STATUSES);
+    elFilters.innerHTML = chips.map(function (c) {
+      var n = c.key === 'all' ? list.length : list.filter(function (e) { return e.status === c.key; }).length;
+      return '<button class="chip' + (filter === c.key ? ' on' : '') + '" data-filter="' + c.key + '" role="tab" aria-selected="' + (filter === c.key) + '">' + c.label + '<span class="n">' + n + '</span></button>';
+    }).join('');
+  }
+
+  function renderList() {
+    var shown = list.filter(function (e) { return filter === 'all' || e.status === filter; });
+    elList.innerHTML = shown.map(function (e) {
+      var l = byId(e.id);
+      return '<li class="lead' + (e.id === justAdded ? ' enter' : '') + '">' + person(l, false) +
+        '<div class="acts">' + statusSelect(e) + liLink(l) +
+        '<button class="rm" data-remove="' + l.id + '" aria-label="Remove ' + esc(l.name) + ' from my list" title="Remove">' + X + '</button>' +
+        '</div></li>';
+    }).join('');
+    justAdded = null;
+    elListEmpty.hidden = shown.length > 0;
+    if (!shown.length && list.length) {
+      elListEmpty.querySelector('.t').innerHTML = '<span class="m">No leads with this status yet.</span>';
+    } else {
+      elListEmpty.querySelector('.t').innerHTML = '<span class="m">Nothing here yet. Tap the</span> <b>+</b> <span class="m">on a high-intent lead to start tracking it.</span>';
+    }
+  }
+
+  function renderCounts() {
+    document.getElementById('found').textContent = LEADS.length;
+    document.getElementById('tracking').textContent = list.length;
+  }
+  function renderAll() { renderLeads(); renderFilters(); renderList(); renderCounts(); }
+
+  /* ---------------- Events ---------------- */
+  document.addEventListener('click', function (ev) {
+    var add = ev.target.closest('[data-add]');
+    if (add) {
+      var id = add.getAttribute('data-add');
+      if (entry(id)) { list = list.filter(function (e) { return e.id !== id; }); }
+      else { list.unshift({ id: id, status: 'new' }); justAdded = id; filter = 'all'; }
+      save(); renderAll(); return;
+    }
+    var rm = ev.target.closest('[data-remove]');
+    if (rm) {
+      var rid = rm.getAttribute('data-remove');
+      list = list.filter(function (e) { return e.id !== rid; });
+      save(); renderAll(); return;
+    }
+    var f = ev.target.closest('[data-filter]');
+    if (f) { filter = f.getAttribute('data-filter'); renderFilters(); renderList(); }
+  });
+  document.addEventListener('change', function (ev) {
+    var sel = ev.target.closest('[data-status]');
+    if (!sel) return;
+    var e = entry(sel.getAttribute('data-status'));
+    if (!e) return;
+    e.status = sel.value; save(); renderFilters(); renderList();
+  });
+  elQ.addEventListener('input', function () { query = elQ.value; renderLeads(); });
+
+  load();
+  renderAll();
+})();
+</script>
+</body>
+</html>
