@@ -93,28 +93,27 @@
   .side .sfoot a:hover { background: rgba(255,255,255,.07); color: #fff; }
 
   /* ---------- Page ---------- */
-  main { max-width: 1040px; margin: 0 auto; padding: 120px 16px 80px; }
+  main { max-width: 780px; margin: 0 auto; padding: 120px 16px 80px; }
   .view { display: grid; gap: 32px; }
   .hello { text-align: center; display: grid; gap: 14px; padding: 8px 12px 0; }
 
-  .bar { display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap; }
-  .bar h2 { margin: 0; }
+  .bar { display: flex; align-items: center; justify-content: center; gap: 14px; flex-wrap: wrap; }
   .search {
-    flex: 0 1 320px; display: flex; align-items: center; gap: 8px; padding: 11px 16px; border-radius: 16px;
+    flex: 0 1 420px; display: flex; align-items: center; gap: 8px; padding: 11px 16px; border-radius: 16px;
     background: #fff; border: 1px solid var(--line); box-shadow: 0 6px 18px rgba(0,0,0,.04);
     transition: border-color .2s ease;
   }
   .search:focus-within { border-color: #cfcfca; }
   .search svg { width: 16px; height: 16px; fill: none; stroke: #8a8a8a; stroke-width: 2.4; stroke-linecap: round; flex: none; }
   .search input { flex: 1; border: 0; outline: 0; background: none; font-size: 15px; min-width: 0; }
-  .chips { display: flex; gap: 8px; flex-wrap: wrap; }
+  .chips { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
   .chip { padding: 9px 14px; border-radius: 999px; font-size: 14px; font-weight: 500; color: #555; background: #fff; border: 1px solid var(--line); transition: background .2s ease, color .2s ease; }
   .chip:hover { background: #f4f4f1; }
   .chip.on { background: var(--gray); border-color: var(--gray); color: #fff; }
   .chip .n { opacity: .55; margin-left: 5px; font-weight: 400; }
 
   /* ---------- Lead cards ---------- */
-  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 440px), 1fr)); gap: 20px; list-style: none; }
+  .grid { display: grid; grid-template-columns: 1fr; gap: 20px; list-style: none; }
   .card {
     position: relative; background: #fff; border: 1px solid var(--line); border-radius: 30px; padding: 26px;
     display: grid; gap: 20px; box-shadow: 0 14px 36px rgba(0,0,0,.05);
@@ -217,7 +216,7 @@
 <main>
 
   <!-- View 1 · High-intent leads -->
-  <section class="view" id="view-leads" aria-labelledby="leads-title">
+  <section class="view" id="view-leads" aria-label="High-Intent leads">
     <header class="hello">
       <p class="t g">Good morning, Alex!</p>
       <p class="t">
@@ -229,7 +228,6 @@
     </header>
 
     <div class="bar">
-      <h2 class="t g" id="leads-title">High-Intent leads <span aria-hidden="true">🔥</span></h2>
       <label class="search">
         <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.500-3.500"/></svg>
         <input id="q" type="search" placeholder="Search name, company or email" autocomplete="off">
@@ -241,7 +239,7 @@
   </section>
 
   <!-- View 2 · My list -->
-  <section class="view" id="view-list" aria-labelledby="list-title" hidden>
+  <section class="view" id="view-list" aria-label="My list" hidden>
     <header class="hello">
       <p class="t g">Your list</p>
       <p class="t">
@@ -251,7 +249,6 @@
     </header>
 
     <div class="bar">
-      <h2 class="t g" id="list-title">My list</h2>
       <div class="chips" id="filters" role="tablist" aria-label="Filter by status"></div>
     </div>
 
