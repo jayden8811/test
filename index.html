@@ -13,9 +13,6 @@
     --page: #fcfcfc;
     --ink: #1a1a1a;
     --muted: #7d7d7d;
-    --ic: #6b6b6b;
-    --red: #e0434b;
-    --cocoa: #2b2118;
     --orange: #ff6b2c;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -25,30 +22,16 @@
     font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
     -webkit-font-smoothing: antialiased; letter-spacing: -0.01em;
   }
+  button, input { font: inherit; color: inherit; letter-spacing: inherit; }
 
   /* ---------- One text size for everything ---------- */
   .t { font-size: clamp(19px, 2.2vw, 25px); line-height: 1.45; font-weight: 400; color: var(--ink); }
   .t.g { font-weight: 500; }
   .t .m { color: var(--muted); }
   .t b { font-weight: 600; color: var(--ink); }
-  .t .red, .t .red b { color: var(--red); }
-  .ico {
-    display: inline-block; width: .9em; height: .9em; vertical-align: -0.1em;
-    margin: 0 .2em 0 .1em; fill: none; stroke: var(--ic);
-    stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round;
-  }
-  .t .red .ico { stroke: var(--red); }
-  .dot {
-    display: inline-grid; place-items: center; width: 1.1em; height: 1.1em; border-radius: 50%;
-    background: radial-gradient(circle at 30% 25%, #f0a06a, #c9793f 75%);
-    color: #1a1a1a; font-size: .8em; font-weight: 600; vertical-align: .02em; margin: 0 .25em;
-  }
 
-  /* ---------- Logo mark (white P on black, blended onto the dark surface) ---------- */
-  .mark {
-    display: inline-block; width: 1.05em; height: 1.05em; margin: 0 .25em; vertical-align: -0.16em;
-    background: url(logo.png) center / contain no-repeat;
-  }
+  /* ---------- Logo mark (white P, transparent PNG) ---------- */
+  .mark { display: inline-block; width: 1.05em; height: 1.05em; margin: 0 .25em; vertical-align: -0.16em; background: url(logo.png) center / contain no-repeat; }
 
   /* ---------- Nav ---------- */
   .nav {
@@ -59,71 +42,87 @@
     box-shadow: 0 10px 30px rgba(0,0,0,.18);
     color: #fff; font-size: 14px; font-weight: 500;
   }
-  .nav a { color: inherit; text-decoration: none; }
+  .nav a { color: inherit; text-decoration: none; white-space: nowrap; }
   .nav .login { justify-self: start; opacity: .85; transition: opacity .2s ease; }
   .nav .login:hover { opacity: 1; }
   .nav .logo { display: flex; align-items: center; gap: 2px; font-size: 18px; font-weight: 600; letter-spacing: -0.02em; }
-  .nav .logo .mark { width: 20px; height: 20px; margin: 0 2px 0 0; font-size: 20px; vertical-align: 0; }
-  .nav .book {
-    justify-self: end; padding: 7px 14px; border-radius: 12px; background: #fcfcfc; color: #1a1a1a;
-    font-weight: 600; transition: transform .2s ease, background .2s ease;
-  }
+  .nav .logo .mark { width: 20px; height: 20px; margin: 0 2px 0 0; vertical-align: 0; }
+  .nav .book { justify-self: end; padding: 7px 14px; border-radius: 12px; background: #fcfcfc; color: #1a1a1a; font-weight: 600; transition: transform .2s ease, background .2s ease; }
   .nav .book:hover { transform: translateY(-1px); background: #fff; }
 
-  /* ---------- Stack: hero pinned, cards rise over it one by one ---------- */
+  /* ---------- Stack: hero pinned, cards rise over it ---------- */
   .stack { position: relative; }
   .hero {
     position: sticky; top: 0; height: 100vh; height: 100svh;
     display: grid; place-items: center; padding: 0 24px 72px; text-align: center;
     transform-origin: 50% 40%;
   }
-  .hero .inner { max-width: 760px; display: grid; gap: 22px; }
+  .hero .inner { max-width: 760px; }
 
   .card {
     position: relative; margin: -56px 12px 0; padding: 72px 24px 56px;
     display: grid; place-items: center; text-align: center;
     border-radius: 44px 44px 0 0;
     box-shadow: 0 -20px 60px rgba(0,0,0,.12), inset 0 1px 0 rgba(255,255,255,.7);
-    --ink: #1f1a14; --muted: rgba(31,26,20,.48); --ic: rgba(31,26,20,.55); --red: #c9372c;
+    --ink: #1f1a14; --muted: rgba(31,26,20,.48);
   }
   .card::before {
     content: ""; position: absolute; inset: 0 0 auto 0; height: 160px; border-radius: inherit;
     background: linear-gradient(180deg, rgba(255,255,255,.45), rgba(255,255,255,0)); pointer-events: none;
   }
   .card.pin { position: sticky; top: 0; height: 100vh; height: 100svh; }
-  .c1, .c4 { background: #222222; --ink: #ffffff; --muted: rgba(255,255,255,.45); --ic: rgba(255,255,255,.62); --red: #ff6a72; }
-  .c1::before, .c4::before { background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,0)); }
-  .c1 { z-index: 2; margin-top: -76px; }
-  .c2 { background: #f1efe9; z-index: 3; }
-  .c3 { background: #fcfcfc; z-index: 4; }
-  .c4 { z-index: 5; align-items: start; min-height: 100vh; min-height: 100svh; padding-bottom: 96px; }
-  .c5 { background: #f1efe9; z-index: 6; align-items: start; min-height: 100vh; min-height: 100svh; padding-bottom: 72px; }
+  .card.flow { align-items: start; min-height: 100vh; min-height: 100svh; }
+  .c1 { background: #222222; z-index: 2; margin-top: -76px; --ink: #ffffff; --muted: rgba(255,255,255,.45); }
+  .c1::before { background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,0)); }
+  .c2 { background: #f1efe9; z-index: 3; padding-bottom: 96px; }
+  .c3 { background: #fcfcfc; z-index: 4; padding-bottom: 72px; }
 
   .card .inner { position: relative; width: 100%; max-width: 760px; display: grid; gap: 22px; will-change: transform, opacity; }
   .reveal { opacity: .2; transform: translateY(18px); transition: opacity .7s ease, transform .7s ease; }
   .reveal.in { opacity: 1; transform: none; }
 
-  /* ---------- Daily brief demo ---------- */
-  .demo { position: relative; width: 100%; max-width: 640px; margin: 18px auto 0; height: 530px; }
-  .brief {
-    position: absolute; inset: 0 0 auto 0; text-align: left;
-    background: var(--page); border-radius: 30px; padding: 32px 32px 30px;
-    --ink: #1a1a1a; --muted: #7d7d7d; --ic: #6b6b6b; --red: #e0434b;
-    box-shadow: 0 24px 60px rgba(0,0,0,.35);
+  /* ---------- Demo: share two things, calls start landing ---------- */
+  .demo { position: relative; width: 100%; max-width: 640px; margin: 18px auto 0; height: 520px; }
+  .panel {
+    position: absolute; inset: 0; text-align: left; background: #fff; border-radius: 30px; padding: 32px;
+    box-shadow: 0 24px 60px rgba(60,40,10,.14); border: 1px solid rgba(0,0,0,.04);
+    --ink: #1a1a1a; --muted: #7d7d7d;
+    transition: opacity .5s ease, transform .5s ease;
   }
-  .brief .t + .t { margin-top: 14px; }
-  .hit {
-    display: inline-block; padding: 0 .3em; margin: 0 -.1em; border-radius: .5em;
-    transition: background .25s ease; position: relative;
+  .panel.off { opacity: 0; transform: translateY(8px); pointer-events: none; }
+  #results:not(.off) { transition-delay: .4s; }
+  .panel .t + .field-wrap, .panel .t + .calls { margin-top: 22px; }
+  .field-wrap { display: grid; gap: 16px; }
+  .field label { display: block; font-size: 13px; font-weight: 500; color: #8a8a8a; margin-bottom: 6px; }
+  .box {
+    min-height: 52px; padding: 15px 16px; border-radius: 16px; background: #f7f7f5; border: 1px solid #ecece8;
+    font-size: 16px; color: #1a1a1a; line-height: 1.35; transition: border-color .2s ease, background .2s ease;
   }
-  .hit.pressed { background: rgba(255,107,44,.16); }
+  .box.active { border-color: #1a1a1a; background: #fff; }
+  .box.active::after, .box.caret::after { content: ""; display: inline-block; width: 1.5px; height: 1.05em; background: #1a1a1a; margin-left: 2px; vertical-align: -0.15em; animation: blink 1s steps(1) infinite; }
+  @keyframes blink { 50% { opacity: 0; } }
+  .go {
+    margin-top: 6px; width: 100%; padding: 16px 20px; border-radius: 16px; background: #222; color: #fff; font-size: 16px; font-weight: 600;
+    border: 0; text-align: center; transition: transform .15s ease, background .2s ease;
+  }
+  .go.press { transform: scale(.97); background: var(--orange); color: #222; }
+
+  .calls { display: grid; gap: 0; }
+  .call { display: flex; align-items: center; gap: 14px; padding: 14px 4px; border-bottom: 1px solid #f0f0ed; animation: drop .6s cubic-bezier(.2,.8,.2,1); }
+  @keyframes drop { from { opacity: 0; transform: translateY(-16px); } to { opacity: 1; transform: none; } }
+  .av { flex: none; width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; font-size: 15px; font-weight: 600; color: #1a1a1a; }
+  .who { flex: 1; min-width: 0; text-align: left; }
+  .who .n { font-size: 16px; font-weight: 600; color: #1a1a1a; }
+  .who .r { font-size: 14px; color: #7d7d7d; margin-top: 1px; }
+  .tag { flex: none; font-size: 13px; font-weight: 500; color: #1d6b32; background: rgba(46,160,67,.16); padding: 5px 11px; border-radius: 999px; white-space: nowrap; }
+  .num { display: inline-block; min-width: .7em; }
+
   .ripple {
     position: absolute; width: 28px; height: 28px; margin: -14px 0 0 -14px; border-radius: 50%;
     border: 2px solid var(--orange); opacity: 0; pointer-events: none; z-index: 4;
   }
-  .ripple.go { animation: ripple .7s ease-out; }
+  .ripple.go-r { animation: ripple .7s ease-out; }
   @keyframes ripple { from { transform: scale(.3); opacity: .9; } to { transform: scale(2.6); opacity: 0; } }
-
   .cursor {
     position: absolute; left: 0; top: 0; z-index: 5; pointer-events: none; opacity: 0;
     filter: drop-shadow(0 3px 5px rgba(0,0,0,.35)); margin: -4px 0 0 -6px;
@@ -131,64 +130,29 @@
   .cursor svg { display: block; width: 30px; height: 30px; transition: transform .12s ease; transform-origin: 20% 15%; }
   .cursor.click svg { transform: scale(.8); }
 
-  .leads-wrap { max-height: 0; opacity: 0; overflow: hidden; transition: max-height .8s cubic-bezier(.4,0,.2,1), opacity .5s ease, margin .8s ease; margin-top: 0; }
-  .leads-wrap.open { max-height: 330px; opacity: 1; margin-top: 22px; }
-  .leads-clip {
-    height: 310px; overflow: hidden; border-top: 1px solid #ececec;
-    -webkit-mask-image: linear-gradient(transparent, #000 10%, #000 88%, transparent);
-            mask-image: linear-gradient(transparent, #000 10%, #000 88%, transparent);
-  }
-  .leads { list-style: none; animation: roll 22s linear infinite; animation-play-state: paused; }
-  .leads-wrap.open .leads { animation-play-state: running; }
-  @keyframes roll { from { transform: translateY(0); } to { transform: translateY(-50%); } }
-  .lead { display: flex; align-items: center; gap: 14px; padding: 14px 4px; border-bottom: 1px solid #f0f0f0; }
-  .av {
-    flex: none; width: 42px; height: 42px; border-radius: 50%; display: grid; place-items: center;
-    font-size: 15px; font-weight: 600; color: #1a1a1a;
-  }
-  .who { flex: 1; min-width: 0; text-align: left; }
-  .who .n { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; font-size: 16px; font-weight: 600; color: #1a1a1a; }
-  .tag { font-size: 12px; font-weight: 500; color: #1d6b32; background: rgba(46,160,67,.16); padding: 2px 8px; border-radius: 999px; }
-  .who .r { font-size: 14px; color: #7d7d7d; margin-top: 1px; }
-  .who .e { font-size: 14px; color: #3d3d3d; margin-top: 1px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .li { flex: none; width: 28px; height: 28px; border-radius: 7px; background: #0a66c2; display: grid; place-items: center; }
-  .li svg { width: 16px; height: 16px; fill: #fff; }
-
   /* ---------- Calendar embed ---------- */
   .cal {
     width: 100%; max-width: 760px; margin: 8px auto 0; background: #fff; border-radius: 28px; overflow: hidden;
-    box-shadow: 0 24px 60px rgba(0,0,0,.12);
+    border: 1px solid rgba(0,0,0,.06); box-shadow: 0 24px 60px rgba(0,0,0,.08);
   }
   .cal iframe { display: block; width: 100%; height: 700px; border: 0; }
 
   @media (max-width: 560px) {
     .nav { padding: 0 6px 0 14px; height: 46px; font-size: 13px; }
     .nav .logo { font-size: 16px; }
-    .nav a { white-space: nowrap; }
     .nav .book { padding: 7px 11px; }
     .card { border-radius: 32px 32px 0 0; margin-inline: 8px; padding-inline: 18px; }
-    .brief { padding: 24px 20px; border-radius: 24px; }
-    .demo { height: 520px; }
+    .panel { padding: 24px 20px; border-radius: 24px; }
+    .demo { height: 500px; }
     .cal iframe { height: 760px; }
   }
   @media (prefers-reduced-motion: reduce) {
     .reveal { opacity: 1; transform: none; transition: none; }
-    .leads { animation: none; }
+    .call, .box.active::after, .box.caret::after { animation: none; }
   }
 </style>
 </head>
 <body>
-
-<svg width="0" height="0" style="position:absolute" aria-hidden="true">
-  <symbol id="i-cal" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="3"/><path d="M16 2v4M8 2v4M3 10h18"/></symbol>
-  <symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></symbol>
-  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></symbol>
-  <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></symbol>
-  <symbol id="i-alert" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 7v6M12 17h.01"/></symbol>
-  <symbol id="i-filter" viewBox="0 0 24 24"><path d="M3 4h18l-7 8.500V19l-4 2v-8.500z"/></symbol>
-  <symbol id="i-user" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></symbol>
-  <symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></symbol>
-</svg>
 
 <nav class="nav" aria-label="Main">
   <a class="login" href="dashboard.html">Log in</a>
@@ -202,12 +166,9 @@
   <header class="hero" id="hero">
     <div class="inner">
       <p class="t">
-        <span class="m">Tell us your</span>
-        <b><svg class="ico"><use href="#i-target"/></svg>ideal customer</b>
-        <span class="m">and share your</span>
-        <b><svg class="ico"><use href="#i-cal"/></svg>calendar link,</b>
-        <span class="m">and Praz fills it with</span>
-        <b><svg class="ico"><use href="#i-user"/></svg>booked calls</b>
+        <span class="m">Tell us your</span> <b>ideal customer</b>
+        <span class="m">and share your</span> <b>calendar link,</b>
+        <span class="m">and Praz fills it with</span> <b>booked calls</b>
         <span class="m">from high-intent prospects.</span>
       </p>
     </div>
@@ -217,87 +178,59 @@
   <section class="card c1 pin" id="how">
     <div class="inner">
       <div class="reveal" style="display:grid;gap:22px">
-        <p class="t g">How <span class="mark" role="img" aria-label="Praz logo"></span>Praz works</p>
+        <p class="t g">How Praz works</p>
         <p class="t">
-          <span class="m">You share your</span>
-          <b><svg class="ico"><use href="#i-target"/></svg>ICP and calendar link,</b>
+          <span class="m">Built for</span> <b>high-ticket B2B SaaS teams:</b>
+          <span class="m">you share your</span> <b>ICP and calendar link,</b>
           <span class="m">we find the right prospects and handle all the outreach, and</span>
-          <b><svg class="ico"><use href="#i-cal"/></svg>booked calls</b>
-          <span class="m">start landing on your calendar.</span>
+          <b>booked calls</b> <span class="m">land on your calendar.</span>
         </p>
       </div>
     </div>
   </section>
 
-  <!-- 2 · Who it's for -->
-  <section class="card c2 pin" id="who">
-    <div class="inner">
-      <div class="reveal" style="display:grid;gap:22px">
-        <p class="t g">Who it's for</p>
-        <p class="t">
-          <span class="m">Built for</span>
-          <b><svg class="ico"><use href="#i-user"/></svg>high-ticket B2B SaaS teams</b>
-          <span class="m">that want a steady flow of</span>
-          <b><svg class="ico"><use href="#i-cal"/></svg>booked calls</b>
-          <span class="m">without the hiring, tools or busywork.</span>
-        </p>
-      </div>
-    </div>
-  </section>
-
-  <!-- 3 · Guarantee -->
-  <section class="card c3 pin" id="guarantee">
-    <div class="inner">
-      <div class="reveal" style="display:grid;gap:22px">
-        <p class="t g">Our guarantee</p>
-        <p class="t">
-          <span class="m">If we don't deliver</span>
-          <b><svg class="ico"><use href="#i-cal"/></svg>booked calls</b>
-          <span class="m">in your first 30 days, you get a</span>
-          <b><svg class="ico"><use href="#i-shield"/></svg>full refund.</b>
-        </p>
-      </div>
-    </div>
-  </section>
-
-  <!-- 3 · What you get -->
-  <section class="card c4" id="get">
+  <!-- 2 · What you get -->
+  <section class="card c2 flow" id="get">
     <div class="inner">
       <div class="reveal" style="display:grid;gap:22px">
         <p class="t g">What you get</p>
-        <p class="t"><span class="m">Booked calls with your ideal customers, delivered straight to your calendar.</span></p>
+        <p class="t"><span class="m">Share two things and</span> <b>booked calls</b> <span class="m">start landing on your calendar.</span></p>
       </div>
 
       <div class="demo reveal" id="demo">
-        <div class="brief" id="brief">
-          <p class="t g">Good morning, Alex!</p>
-          <p class="t">
-            <span class="m">Praz booked</span>
-            <span class="hit" id="hit"><svg class="ico"><use href="#i-cal"/></svg><b>8 new calls</b></span>
-            <span class="m">for you this week.</span>
-          </p>
-
-          <div class="leads-wrap" id="leadsWrap">
-            <div class="leads-clip">
-              <ul class="leads" id="leads"></ul>
-            </div>
+        <!-- Step 1: the two things -->
+        <div class="panel" id="setup">
+          <p class="t g">Get started</p>
+          <div class="field-wrap">
+            <div class="field"><label>Your ICP</label><div class="box" id="f-icp"></div></div>
+            <div class="field"><label>Your calendar link</label><div class="box" id="f-cal"></div></div>
+            <button class="go" id="go" type="button" tabindex="-1">Start booking calls</button>
           </div>
         </div>
+
+        <!-- Step 2: calls land -->
+        <div class="panel off" id="results">
+          <p class="t g">Praz booked <b><span class="num" id="count">0</span> calls</b> <span class="m">for you.</span></p>
+          <div class="calls" id="calls"></div>
+        </div>
+
         <span class="ripple" id="ripple"></span>
         <span class="cursor" id="cursor">
           <svg viewBox="0 0 24 24"><path d="M5 3l14 7-6 2-2 6z" fill="#111" stroke="#fff" stroke-width="1.5" stroke-linejoin="round"/></svg>
         </span>
       </div>
-
     </div>
   </section>
 
-  <!-- 5 · Book a call -->
-  <section class="card c5" id="book">
+  <!-- 3 · Guarantee + booking -->
+  <section class="card c3 flow" id="book">
     <div class="inner">
       <div class="reveal" style="display:grid;gap:22px">
         <p class="t g">Book a call</p>
-        <p class="t"><span class="m">Pick a</span> <b><svg class="ico"><use href="#i-cal"/></svg>10-minute slot</b> <span class="m">that works for you.</span></p>
+        <p class="t">
+          <span class="m">If we don't deliver</span> <b>booked calls</b>
+          <span class="m">in your first 30 days, you get a</span> <b>full refund.</b>
+        </p>
       </div>
       <div class="cal reveal">
         <iframe src="https://cal.com/praz-kjqqtj/10min?embed=true&theme=light" title="Book a call with Praz" loading="lazy" allow="payment"></iframe>
@@ -311,67 +244,82 @@
 (function () {
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  /* ---- sample booked calls (fictional) ---- */
-  var leads = [
-    ['Sarah Chen',   'VP Sales',            'Brightloop', 'sarah.chen@brightloop.io',   'Mon · 10:00 AM', '#f6c9a8'],
-    ['Marcus Webb',  'Head of Growth',      'Northstack', 'marcus.webb@northstack.io',  'Mon · 2:30 PM',  '#bcd4f6'],
-    ['Priya Nair',   'CRO',                 'Loomwave',   'priya@loomwave.com',         'Tue · 9:30 AM',  '#c9e8c4'],
-    ['Daniel Ortiz', 'Director of RevOps',  'Cloudmere',  'd.ortiz@cloudmere.io',       'Tue · 1:00 PM',  '#e3cdf5'],
-    ['Emily Rhodes', 'VP Marketing',        'Stackhaven', 'emily.rhodes@stackhaven.co', 'Wed · 11:00 AM', '#f9e1a0'],
-    ['Tom Ikeda',    'Founder & CEO',       'Pipelane',   'tom@pipelane.io',            'Wed · 4:00 PM',  '#f5bcc4'],
-    ['Hannah Berg',  'Head of Demand Gen',  'Quillbase',  'hannah.berg@quillbase.com',  'Thu · 10:30 AM', '#b9e6e6'],
-    ['Jordan Pike',  'Sales Director',      'Vantora',    'jordan.pike@vantora.io',     'Fri · 12:00 PM', '#d6d6f5']
+  /* ---- demo: sample data (fictional) ---- */
+  var ICP = 'VP Sales at B2B SaaS, 50–500 employees';
+  var CAL = 'cal.com/your-name/intro';
+  var CALLS = [
+    ['Sarah Chen',   'VP Sales · Brightloop',          'Tue · 9:30 AM',  '#f6c9a8'],
+    ['Marcus Webb',  'Head of Growth · Northstack',    'Tue · 1:00 PM',  '#bcd4f6'],
+    ['Priya Nair',   'CRO · Loomwave',                 'Wed · 11:00 AM', '#c9e8c4'],
+    ['Daniel Ortiz', 'Director of RevOps · Cloudmere', 'Thu · 10:30 AM', '#e3cdf5']
   ];
-  var li = '<span class="li"><svg viewBox="0 0 24 24"><path d="M6.940 5a2 2 0 1 1-4-.002 2 2 0 0 1 4 .002zM7 8.480H3V21h4V8.480zm6.320 0H9.340V21h3.940v-6.570c0-3.660 4.770-4 4.770 0V21H22v-7.930c0-6.170-7.060-5.940-8.720-2.910l.04-1.680z"/></svg></span>';
-  function row(l) {
-    var ini = l[0].split(' ').map(function (s) { return s[0]; }).join('');
-    return '<li class="lead"><span class="av" style="background:' + l[5] + '">' + ini + '</span>' +
-      '<div class="who"><div class="n">' + l[0] + '<span class="tag">' + l[4] + '</span></div>' +
-      '<div class="r">' + l[1] + ' · ' + l[2] + '</div><div class="e">' + l[3] + '</div></div>' + li + '</li>';
-  }
-  var html = leads.map(row).join('');
-  document.getElementById('leads').innerHTML = html + html; // doubled for a seamless loop
 
-  /* ---- demo: cursor clicks the brief, list opens and scrolls ---- */
-  var demo = document.getElementById('demo'), hit = document.getElementById('hit'),
-      wrap = document.getElementById('leadsWrap'), cur = document.getElementById('cursor'),
-      rip = document.getElementById('ripple');
+  var demo = document.getElementById('demo'), setup = document.getElementById('setup'), results = document.getElementById('results'),
+      fIcp = document.getElementById('f-icp'), fCal = document.getElementById('f-cal'), go = document.getElementById('go'),
+      callsEl = document.getElementById('calls'), countEl = document.getElementById('count'),
+      cur = document.getElementById('cursor'), rip = document.getElementById('ripple');
   var timers = [];
   function later(ms, fn) { timers.push(setTimeout(fn, ms)); }
   function stop() { timers.forEach(clearTimeout); timers = []; }
+  function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+
+  function type(el, text, start, speed) {
+    el.classList.add('active');
+    for (var i = 1; i <= text.length; i++) (function (n) { later(start + n * speed, function () { el.textContent = text.slice(0, n); }); })(i);
+    later(start + text.length * speed + 80, function () { el.classList.remove('active'); });
+    return start + text.length * speed + 80;
+  }
+  function addCall(c) {
+    var ini = c[0].split(' ').map(function (s) { return s[0]; }).join('');
+    var d = document.createElement('div'); d.className = 'call';
+    d.innerHTML = '<span class="av" style="background:' + c[3] + '">' + esc(ini) + '</span><div class="who"><div class="n">' + esc(c[0]) + '</div><div class="r">' + esc(c[1]) + '</div></div><span class="tag">' + esc(c[2]) + '</span>';
+    callsEl.appendChild(d);
+  }
   function target() {
-    var d = demo.getBoundingClientRect(), r = hit.getBoundingClientRect();
-    return { x: r.left - d.left + r.width * 0.6, y: r.top - d.top + r.height * 0.65, w: d.width, h: d.height };
+    var d = demo.getBoundingClientRect(), r = go.getBoundingClientRect();
+    return { x: r.left - d.left + r.width * 0.55, y: r.top - d.top + r.height * 0.55, w: d.width, h: d.height };
   }
   function reset() {
-    wrap.classList.remove('open'); hit.classList.remove('pressed'); cur.classList.remove('click');
+    setup.classList.remove('off'); results.classList.add('off');
+    fIcp.textContent = ''; fCal.textContent = ''; fIcp.classList.remove('active'); fCal.classList.remove('active');
+    go.classList.remove('press'); callsEl.innerHTML = ''; countEl.textContent = '0'; cur.classList.remove('click');
     var t = target();
     cur.style.transition = 'none'; cur.style.opacity = '0';
-    cur.style.transform = 'translate(' + (t.w * 0.82) + 'px,' + (t.h * 0.78) + 'px)';
+    cur.style.transform = 'translate(' + (t.w * 0.85) + 'px,' + (t.h * 0.95) + 'px)';
     void cur.offsetWidth;
   }
   function play() {
     reset();
-    later(500, function () {
+    var t1 = type(fIcp, ICP, 500, 32);
+    var t2 = type(fCal, CAL, t1 + 250, 36);
+    var tc = t2 + 350;
+    later(tc, function () {
       var t = target();
-      cur.style.transition = 'transform 1.3s cubic-bezier(.45,0,.2,1), opacity .4s ease';
+      cur.style.transition = 'transform 1.1s cubic-bezier(.45,0,.2,1), opacity .4s ease';
       cur.style.opacity = '1';
       cur.style.transform = 'translate(' + t.x + 'px,' + t.y + 'px)';
     });
-    later(1900, function () {
+    later(tc + 1250, function () {
       var t = target();
-      cur.classList.add('click'); hit.classList.add('pressed');
+      cur.classList.add('click'); go.classList.add('press');
       rip.style.left = t.x + 'px'; rip.style.top = t.y + 'px';
-      rip.classList.remove('go'); void rip.offsetWidth; rip.classList.add('go');
+      rip.classList.remove('go-r'); void rip.offsetWidth; rip.classList.add('go-r');
       later(160, function () { cur.classList.remove('click'); });
     });
-    later(2200, function () { wrap.classList.add('open'); });
-    later(3300, function () { cur.style.opacity = '0'; });
-    later(14500, function () { wrap.classList.remove('open'); hit.classList.remove('pressed'); });
-    later(16200, play);
+    later(tc + 1650, function () { cur.style.opacity = '0'; setup.classList.add('off'); results.classList.remove('off'); });
+    CALLS.forEach(function (c, i) {
+      later(tc + 2500 + i * 1300, function () { addCall(c); countEl.textContent = String(i + 1); });
+    });
+    var end = tc + 2500 + CALLS.length * 1300 + 3500;
+    later(end, function () { results.classList.add('off'); });
+    later(end + 900, play);
+  }
+  function showFinal() {
+    fIcp.textContent = ICP; fCal.textContent = CAL; setup.classList.add('off'); results.classList.remove('off');
+    CALLS.forEach(addCall); countEl.textContent = String(CALLS.length); cur.style.display = 'none';
   }
   if (reduce) {
-    wrap.classList.add('open'); hit.classList.add('pressed'); cur.style.display = 'none';
+    showFinal();
   } else if ('IntersectionObserver' in window) {
     new IntersectionObserver(function (es) {
       es.forEach(function (e) { stop(); if (e.isIntersecting) play(); else reset(); });
@@ -409,9 +357,7 @@
   /* ---- stack: previous layer recedes as the next card rises over it ---- */
   var layers = [
     { el: document.getElementById('hero'), next: document.getElementById('how'), peek: 76, s: 0.06, o: 0.7 },
-    { el: document.querySelector('#how .inner'), next: document.getElementById('who'), peek: 56, s: 0.05, o: 0.65 },
-    { el: document.querySelector('#who .inner'), next: document.getElementById('guarantee'), peek: 56, s: 0.05, o: 0.65 },
-    { el: document.querySelector('#guarantee .inner'), next: document.getElementById('get'), peek: 56, s: 0.05, o: 0.65 }
+    { el: document.querySelector('#how .inner'), next: document.getElementById('get'), peek: 56, s: 0.05, o: 0.65 }
   ];
   function onScroll() {
     if (reduce) return;
