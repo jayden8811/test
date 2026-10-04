@@ -89,8 +89,6 @@
   .side .item .badge { min-width: 24px; padding: 2px 8px; border-radius: 999px; background: rgba(255,255,255,.12); font-size: 12px; font-weight: 600; text-align: center; }
   .side .item[aria-current="page"] .badge { background: var(--orange); color: #222; }
   .side .grow { flex: 1; }
-  .side .sfoot a { display: block; padding: 10px 14px; border-radius: 14px; color: rgba(255,255,255,.6); font-size: 14px; text-decoration: none; }
-  .side .sfoot a:hover { background: rgba(255,255,255,.07); color: #fff; }
 
   /* ---------- Page ---------- */
   main { max-width: 780px; margin: 0 auto; padding: 120px 16px 80px; }
@@ -208,8 +206,7 @@
   <button class="item" data-view="list"><span class="em" aria-hidden="true">📋</span><span class="name">My list</span><span class="badge" id="b-list">0</span></button>
   <div class="grow"></div>
   <div class="sfoot">
-    <a href="index.html">&larr; Back to home</a>
-    <a href="index.html#book">Book a call</a>
+    <button class="item" id="account" type="button"><span class="em" aria-hidden="true">👤</span><span class="name">My account</span></button>
   </div>
 </aside>
 
