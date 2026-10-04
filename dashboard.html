@@ -143,6 +143,48 @@
 
   .count-note { text-align: center; margin-top: 18px; color: rgba(255,255,255,.4); font-size: 14px; }
 
+  /* ---------- Pull-out side bar ---------- */
+  .pull {
+    position: fixed; left: 0; top: 50%; transform: translateY(-50%); z-index: 55;
+    width: 30px; height: 84px; display: grid; place-items: center;
+    background: var(--gray); color: #fff; border-radius: 0 16px 16px 0;
+    box-shadow: 0 10px 30px rgba(0,0,0,.2); transition: width .2s ease, opacity .2s ease;
+  }
+  .pull:hover { width: 36px; }
+  .pull svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; }
+  .pull.hide { opacity: 0; pointer-events: none; }
+  .scrim { position: fixed; inset: 0; z-index: 58; background: rgba(0,0,0,.3); opacity: 0; pointer-events: none; transition: opacity .3s ease; }
+  .scrim.on { opacity: 1; pointer-events: auto; }
+  .side {
+    position: fixed; top: 12px; bottom: 12px; left: 12px; z-index: 60; width: min(280px, calc(100% - 24px));
+    display: flex; flex-direction: column; gap: 6px; padding: 16px;
+    background: var(--gray); color: #fff; border-radius: 28px; border: 1px solid rgba(255,255,255,.08);
+    box-shadow: 0 30px 70px rgba(0,0,0,.35);
+    transform: translateX(calc(-100% - 24px)); visibility: hidden;
+    transition: transform .45s cubic-bezier(.2,.8,.2,1), visibility 0s linear .45s;
+  }
+  .side.open { transform: none; visibility: visible; transition: transform .45s cubic-bezier(.2,.8,.2,1), visibility 0s; }
+  .side .top { display: flex; align-items: center; justify-content: space-between; padding: 4px 4px 14px; }
+  .side .brand { display: flex; align-items: center; gap: 2px; font-size: 18px; font-weight: 600; letter-spacing: -0.02em; }
+  .side .brand .mark { width: 20px; height: 20px; margin: 0 2px 0 0; vertical-align: 0; }
+  .side .close { width: 32px; height: 32px; border-radius: 10px; display: grid; place-items: center; color: rgba(255,255,255,.7); }
+  .side .close:hover { background: rgba(255,255,255,.1); color: #fff; }
+  .side .close svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; }
+  .side .label { padding: 6px 12px; font-size: 12px; font-weight: 500; letter-spacing: .02em; color: rgba(255,255,255,.4); }
+  .side .item {
+    display: flex; align-items: center; gap: 12px; width: 100%; padding: 12px 14px; border-radius: 16px; text-align: left;
+    color: rgba(255,255,255,.7); font-size: 16px; font-weight: 500; transition: background .2s ease, color .2s ease;
+  }
+  .side .item:hover { background: rgba(255,255,255,.07); color: #fff; }
+  .side .item[aria-current="page"] { background: rgba(255,255,255,.12); color: #fff; }
+  .side .item .em { font-size: 18px; width: 22px; text-align: center; }
+  .side .item .name { flex: 1; }
+  .side .item .badge { min-width: 24px; padding: 2px 8px; border-radius: 999px; background: rgba(255,255,255,.12); font-size: 12px; font-weight: 600; text-align: center; }
+  .side .item[aria-current="page"] .badge { background: var(--orange); color: #222; }
+  .side .grow { flex: 1; }
+  .side .foot a { display: block; padding: 10px 14px; border-radius: 14px; color: rgba(255,255,255,.6); font-size: 14px; text-decoration: none; }
+  .side .foot a:hover { background: rgba(255,255,255,.07); color: #fff; }
+
   footer { text-align: center; color: #9a9a9a; font-size: 14px; }
 
   @media (max-width: 640px) {
@@ -165,6 +207,25 @@
   <a class="logo" href="index.html" aria-label="Praz home"><span class="mark" role="img" aria-label="Praz logo"></span>Praz</a>
   <a class="book" href="index.html#book">Book a call</a>
 </nav>
+
+<button class="pull" id="pull" aria-label="Open menu" aria-expanded="false" aria-controls="side">
+  <svg viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg>
+</button>
+<div class="scrim" id="scrim"></div>
+<aside class="side" id="side" aria-label="Dashboard sections">
+  <div class="top">
+    <span class="brand"><span class="mark" role="img" aria-label="Praz logo"></span>Praz</span>
+    <button class="close" id="close" aria-label="Close menu"><svg viewBox="0 0 24 24"><path d="m15 6-6 6 6 6"/></svg></button>
+  </div>
+  <div class="label">Sections</div>
+  <button class="item" data-view="leads"><span class="em" aria-hidden="true">🔥</span><span class="name">High-Intent leads</span><span class="badge" id="b-leads">0</span></button>
+  <button class="item" data-view="list"><span class="em" aria-hidden="true">📋</span><span class="name">My list</span><span class="badge" id="b-list">0</span></button>
+  <div class="grow"></div>
+  <div class="foot">
+    <a href="index.html">&larr; Back to home</a>
+    <a href="index.html#book">Book a call</a>
+  </div>
+</aside>
 
 <main>
 
@@ -330,6 +391,8 @@
   function renderCounts() {
     document.getElementById('found').textContent = LEADS.length;
     document.getElementById('tracking').textContent = list.length;
+    document.getElementById('b-leads').textContent = LEADS.length;
+    document.getElementById('b-list').textContent = list.length;
   }
   function renderAll() { renderLeads(); renderFilters(); renderList(); renderCounts(); }
 
@@ -360,8 +423,36 @@
   });
   elQ.addEventListener('input', function () { query = elQ.value; renderLeads(); });
 
+  /* ---------------- Side bar + views ---------------- */
+  var side = document.getElementById('side'), scrim = document.getElementById('scrim'), pull = document.getElementById('pull');
+  var panels = { leads: document.getElementById('leads-panel'), list: document.getElementById('list-panel') };
+  function openSide(open) {
+    side.classList.toggle('open', open); scrim.classList.toggle('on', open);
+    pull.classList.toggle('hide', open); pull.setAttribute('aria-expanded', String(open));
+    if (open) { var cur = side.querySelector('[aria-current="page"]'); if (cur) cur.focus(); } else { pull.focus({ preventScroll: true }); }
+  }
+  function setView(v, replace) {
+    if (!panels[v]) v = 'leads';
+    Object.keys(panels).forEach(function (k) { panels[k].hidden = k !== v; });
+    side.querySelectorAll('[data-view]').forEach(function (b) {
+      if (b.getAttribute('data-view') === v) b.setAttribute('aria-current', 'page'); else b.removeAttribute('aria-current');
+    });
+    try { history.replaceState(null, '', '#' + v); } catch (e) {}
+    window.scrollTo(0, 0);
+  }
+  pull.addEventListener('click', function () { openSide(true); });
+  document.getElementById('close').addEventListener('click', function () { openSide(false); });
+  scrim.addEventListener('click', function () { openSide(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && side.classList.contains('open')) openSide(false); });
+  side.addEventListener('click', function (e) {
+    var b = e.target.closest('[data-view]');
+    if (!b) return;
+    setView(b.getAttribute('data-view')); openSide(false);
+  });
+
   load();
   renderAll();
+  setView((location.hash || '').replace('#', '') || 'leads');
 })();
 </script>
 </body>
