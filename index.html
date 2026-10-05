@@ -57,9 +57,10 @@
     display: grid; place-items: center; padding: 0 24px 72px; text-align: center;
     transform-origin: 50% 40%;
   }
-  .hero .inner { max-width: 880px; }
+  .hero .inner { max-width: 1040px; }
   .hero .inner { display: grid; gap: 22px; }
-  .hero h1 { text-wrap: balance; font-size: clamp(28px, 4vw, 44px); line-height: 1.15; letter-spacing: -0.03em; font-weight: 600; color: var(--ink); }
+  .hero h1 { text-wrap: balance; font-size: clamp(26px, 3.2vw, 38px); line-height: 1.2; letter-spacing: -0.03em; font-weight: 600; color: var(--ink); }
+  @media (min-width: 720px) { .hero h1 { white-space: nowrap; } }
   .hero .sub { font-size: clamp(18px, 2vw, 22px); line-height: 1.5; font-weight: 500; color: #6b6b6b; max-width: 680px; margin: 0 auto; }
 
   /* iPhone-style text selection highlight */
